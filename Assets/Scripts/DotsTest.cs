@@ -16,7 +16,7 @@ public class DotsTest : JobComponentSystem
         JobHandle jh = Entities.ForEach((
             ref Translation pos, in MoveBy moveBy) =>
         {
-            pos.Value.xyz += moveBy.translation;
+            pos.Value += moveBy.Speed;
         }).Schedule(data);
 
         return jh;
@@ -25,5 +25,5 @@ public class DotsTest : JobComponentSystem
 [GenerateAuthoringComponent]
 public struct MoveBy : IComponentData
 {
-    public float3 translation; 
+    public float3 Speed; 
 }
