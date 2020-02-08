@@ -5,8 +5,8 @@ using Unity.Entities;
 
 namespace MarchingCubes
 {
-    [BurstCompile]
-    [InternalBufferCapacity(8*8*8)]
+    //[BurstCompile]
+    //[InternalBufferCapacity(8*8*8)]
     public struct MarchingChunk : IComponentData
     {
         //public Type ElementType { get; }
