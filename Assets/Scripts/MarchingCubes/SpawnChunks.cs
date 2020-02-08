@@ -11,8 +11,9 @@ namespace MarchingCubes
     {
         public static int POINTS_IN_ROW = 3;
         public static int POINTS_IN_CHUNKS = POINTS_IN_ROW*POINTS_IN_ROW*POINTS_IN_ROW;
-        public static float CHUNK_SIZE = 1;
+        public static float CHUNK_SIZE = 4;
         public int3 ChunksToSpawn = new int3(2,2,2);
+        
         public Mesh Mesh;
         public Material Material;
         void Start()
@@ -23,21 +24,19 @@ namespace MarchingCubes
                 typeof(Rotation),
                 typeof(RenderMesh),
                 typeof(LocalToWorld),
-                typeof(MarchingChunk)
-                );
+                typeof(ChunkIndex)
+            );
             var pointArchetype = ecsManager.CreateArchetype(
-                typeof(MarchingPoint)
+                typeof(MarchingPoint),
+                typeof(Translation),
+                typeof(ChunkIndex)
             );
             
-            int chunkCount = ChunksToSpawn.x * ChunksToSpawn.y * ChunksToSpawn.z;
-            var chunkEntities = ecsManager.CreateEntity(chunkArchetype, chunkCount, Allocator.Temp);
+            var chunkEntities = ecsManager.CreateEntity(chunkArchetype, ChunksToSpawn.Volume(), Allocator.Temp);
             
-            Debug.Log(POINTS_IN_CHUNKS);
-            Debug.Log(chunkCount);
-            Debug.Log(POINTS_IN_CHUNKS * chunkCount);
-            chunkEntities.IndexAsIf3D(ChunksToSpawn, (chunk, chunkX, chunkY, chunkZ, index) =>
+            chunkEntities.IndexAsIf3D(ChunksToSpawn, (chunk, index) =>
             {
-                ecsManager.SetName(chunk, $"Chunk [{chunkX}, {chunkY}, {chunkZ}]");
+                ecsManager.SetName(chunk, $"Chunk [{index.x}, {index.y}, {index.z}]");
                 
                 ecsManager.SetSharedComponentData(chunk, new RenderMesh
                 {
@@ -45,33 +44,54 @@ namespace MarchingCubes
                     mesh = Mesh
                 });
 
+                var position = new float3(index.x, index.y, index.z) * CHUNK_SIZE;
                 ecsManager.SetComponentData(chunk, new Translation
                 {
-                    Value = new float3(chunkX,chunkY,chunkZ)
+                    Value = position
+                });
+                
+                ecsManager.SetSharedComponentData(chunk, new ChunkIndex
+                {
+                    Index = GetChunkIndex(position, CHUNK_SIZE)
                 });
             });
             
-            for (int i = 0; i < chunkCount; i++)
-            {
-                var pointEntities = ecsManager.CreateEntity(pointArchetype, POINTS_IN_CHUNKS, Allocator.Temp);
-                pointEntities.IndexAsIf3D(new int3(POINTS_IN_ROW,POINTS_IN_ROW,POINTS_IN_ROW), (point, jp, kp, wp, indexP) =>
+            
+                int3 pointsToSpawn = ChunksToSpawn * POINTS_IN_ROW;
+                var pointEntities = ecsManager.CreateEntity(pointArchetype, pointsToSpawn.Volume(), Allocator.Temp);
+
+                pointEntities.IndexAsIf3D(new int3(pointsToSpawn), (point, index) =>
                 {
-                    ecsManager.SetName(point, $"Point [{jp},{kp},{wp}], Chunk [{iP}");
+
+                    ecsManager.SetName(point, $"Point [{index.x}, {index.y}, {index.z}]");
+                    
+                    var position = (new float3(index.x, index.y, index.z) * CHUNK_SIZE) / POINTS_IN_ROW;
+                    ecsManager.SetComponentData(point, new Translation
+                    {
+                        Value = position
+                    });
+                    
                     ecsManager.SetComponentData(point, new MarchingPoint
                     {
-                        ChunkPos = new float3(jp,kp,wp),
                         Density = 0.5f
                     });
+                    
+                    ecsManager.SetSharedComponentData(point, new ChunkIndex
+                    {
+                        Index = GetChunkIndex(position, CHUNK_SIZE)
+                    });
+                    
                 });
                 
-                ecsManager.SetComponentData(chunkEntities[i], new MarchingChunk (
-                    pointEntities
-                ));
+                
+                chunkEntities.Dispose();
                 pointEntities.Dispose();
-            }
-            
-            
-            chunkEntities.Dispose();
+        }
+        
+        public int3 GetChunkIndex(float3 position, float chunkSize){
+            return  (int3) (position / chunkSize);
         }
     }
+    
+    
 }

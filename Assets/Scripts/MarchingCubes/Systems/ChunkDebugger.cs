@@ -1,6 +1,7 @@
 ﻿using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
 
@@ -12,9 +13,15 @@ namespace MarchingCubes.Systems
         protected override void OnUpdate()
         {
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            Entities.WithAll<MarchingChunk, Translation>().ForEach((Entity entity) =>
+            Entities.WithAll<Translation, RenderMesh, ChunkIndex>().ForEach((Entity entity) =>
             {
                 DebugDrawChunk(ecs.GetComponentData<Translation>(entity));
+                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
+            });
+            
+            Entities.WithAll<MarchingPoint, Translation>().ForEach((Entity entity) =>
+            {
+                DebugDrawPoint(ecs.GetComponentData<Translation>(entity), ecs.GetComponentData<MarchingPoint>(entity));
                 //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
             });
             
@@ -57,6 +64,15 @@ namespace MarchingCubes.Systems
             Debug.DrawLine(br1 + p,br2 + p, rightCol);
             Debug.DrawLine(tr1 + p,tr2 + p, rightCol);
             Debug.DrawLine(tl1 + p,tl2 + p, leftCol);
+        }
+
+        static void DebugDrawPoint(Translation pos, MarchingPoint point)
+        {
+            var value = point.Density;
+            var p = pos.Value;
+            var col = new Color(value, value, value,1f);
+            
+            Debug.DrawLine(p,p + new float3(0.1f), col);
         }
         
     }

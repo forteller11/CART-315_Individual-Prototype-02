@@ -10,9 +10,9 @@
           <e p="DotsTest.cs" t="Include" />
           <e p="MarchingCubes" t="Include">
             <e p="Componenets" t="Include">
-              <e p="MarchingChunk.cs" t="Include" />
+              <e p="ChunkIndex.cs" t="Include" />
+              <e p="ChunkRenderer.cs" t="Include" />
               <e p="MarchingPoint.cs" t="Include" />
-              <e p="tag_DirtyChunk.cs" t="Include" />
             </e>
             <e p="Extensions.cs" t="Include" />
             <e p="SpawnChunks.cs" t="Include" />
