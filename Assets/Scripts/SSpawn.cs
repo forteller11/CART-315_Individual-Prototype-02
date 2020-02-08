@@ -26,7 +26,7 @@ public class RandomMovement : ComponentSystem
         Entities.ForEach((ref Translation pos) =>
         {
             float3 line = new float3(0.5f, 0.5f, 0.5f);
-            Debug.DrawLine(pos.Value, line);
+            //Debug.DrawLine(pos.Value, line);
         });
     }
     

@@ -9,8 +9,11 @@ public class SpawnEntities : MonoBehaviour
 {
     public int NumberOfEntities = 100;
     public float RanSpeed = 0.1f;
+    public float RanScale = 0.8f;
+    public float SlowDownBy = .99f;
     [SerializeField] public Mesh Mesh;
     [SerializeField] public Material Material;
+    
     void Start()
     {
         var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -20,7 +23,8 @@ public class SpawnEntities : MonoBehaviour
             typeof(Rotation),
             typeof(RenderMesh),
             typeof(LocalToWorld),
-            typeof(MoveBy)
+            typeof(MoveBy),
+            typeof(Scale)
         );
         //ecsManager.SetE
 
@@ -35,15 +39,22 @@ public class SpawnEntities : MonoBehaviour
                 );
             
             ecsManager.SetComponentData(entity, 
-                new MoveBy {Speed = new float3(ran.NextFloat(-RanSpeed,RanSpeed),ran.NextFloat(-RanSpeed,RanSpeed),ran.NextFloat(-RanSpeed,RanSpeed))}
+                new Scale {Value = ran.NextFloat(0, ran.NextFloat(0, RanScale))}
+            );
+
+            
+            ecsManager.SetComponentData(entity, 
+                new MoveBy
+                {
+                    Speed = new float3(ran.NextFloat(-RanSpeed,RanSpeed),ran.NextFloat(-RanSpeed,RanSpeed),ran.NextFloat(-RanSpeed,RanSpeed)),
+                    SlowDownBy = SlowDownBy
+                }
             );
             
             ecsManager.SetSharedComponentData(entity, 
                 new RenderMesh {mesh = Mesh, material = Material}
             );
         }
-        Debug.Log(entities);
-        Debug.Log(entities[0]);
 
         entities.Dispose();
     }
