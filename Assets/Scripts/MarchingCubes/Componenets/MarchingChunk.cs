@@ -7,10 +7,10 @@ namespace MarchingCubes
 {
     //[BurstCompile]
     //[InternalBufferCapacity(8*8*8)]
-    public struct MarchingChunk : IComponentData
+    public struct MarchingChunk : IDynamicBufferContainer
     {
-        //public Type ElementType { get; }
-        //public NativeList<MarchingPoint> Points;
+        public Type ElementType { get; }
+        public NativeList<MarchingPoint> Points;
     }
     
     
