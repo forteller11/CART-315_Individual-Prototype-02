@@ -6,14 +6,14 @@ using Unity.Entities;
 namespace MarchingCubes
 {
     [BurstCompile]
-    [InternalBufferCapacity(POINTS_IN_CHUNKS)]
-    
-    static ChunkSpawner POINTS_IN_CHUNKS = 8;
-    public struct MarchingChunk : IDynamicBufferContainer
+    [InternalBufferCapacity(8*8*8)]
+    public struct MarchingChunk : IComponentData
     {
-        public Type ElementType { get; }
-        public NativeList<MarchingPoint> Points;
+        //public Type ElementType { get; }
+        //public NativeList<MarchingPoint> Points;
     }
+    
+    
 }
 
 

@@ -9,7 +9,9 @@ namespace MarchingCubes
 {
     public class SpawnChunks : MonoBehaviour
     {
-        public int3 ChunksToSpawn = new int3(1,1,1);
+        public static int POINTS_IN_CHUNKS = 8;
+        public static float CHUNK_SIZE = 4;
+        public int3 ChunksToSpawn = new int3(4,3,4);
         public Mesh Mesh;
         public Material Material;
         void Start()
@@ -46,6 +48,8 @@ namespace MarchingCubes
                         {
                             Value = new float3(i,j,k)
                         });
+                        
+                        ecsManager.SetName(chunkEntities[index], $"Chunk [{i},{j},{k}] --> {index}");
                     }
                 }
             }

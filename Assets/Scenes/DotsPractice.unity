@@ -121,6 +121,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &233439846
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 233439848}
+  - component: {fileID: 233439847}
+  m_Layer: 0
+  m_Name: ChunkSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &233439847
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233439846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8253d1b55a8d46a1a30e61569be2fcf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ChunksToSpawn:
+    x: 1
+    y: 1
+    z: 1
+  Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
+--- !u!4 &233439848
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 233439846}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.8880005, y: 0.5549023, z: 0.4564898}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -290,7 +339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0.04891167, y: 0.757706, z: -0.057170752, w: -0.64824444}
-  m_LocalPosition: {x: 6.353014, y: 1.5014901, z: 1.9689465}
+  m_LocalPosition: {x: 11.126693, y: 2.5542169, z: 2.4953911}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -312,7 +361,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1009099820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,10 +374,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a02f405421619ba4482e2881bbe298b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NumberOfEntities: 10
-  RanSpeed: 0
+  NumberOfEntities: 100000
+  RanSpeed: 0.81
+  RanScale: 0.07
+  SlowDownBy: 0.99
   Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-  Material: {fileID: 2100000, guid: 7b64f647830089349afe155b76c06a3a, type: 2}
+  Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
 --- !u!4 &1009099821
 Transform:
   m_ObjectHideFlags: 0
@@ -336,8 +387,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1009099819}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.8742771, y: 0.23761547, z: 0.6800467}
+  m_LocalRotation: {x: -0.048911575, y: 0.75770605, z: -0.057170656, w: -0.6482444}
+  m_LocalPosition: {x: 11.126693, y: 2.5542169, z: 2.4953911}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

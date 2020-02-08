@@ -9,10 +9,15 @@
         <e p="Scripts" t="Include">
           <e p="DotsTest.cs" t="Include" />
           <e p="MarchingCubes" t="Include">
-            <e p="MarchingChunk.cs" t="Include" />
-            <e p="MarchingPoint.cs" t="Include" />
+            <e p="Componenets" t="Include">
+              <e p="MarchingChunk.cs" t="Include" />
+              <e p="MarchingPoint.cs" t="Include" />
+              <e p="tag_DirtyChunk.cs" t="Include" />
+            </e>
             <e p="SpawnChunks.cs" t="Include" />
-            <e p="tag_DirtyChunk.cs" t="Include" />
+            <e p="Systems" t="Include">
+              <e p="ChunkDebugger.cs" t="Include" />
+            </e>
           </e>
           <e p="SpawnEntities.cs" t="Include" />
           <e p="SSpawn.cs" t="Include" />
