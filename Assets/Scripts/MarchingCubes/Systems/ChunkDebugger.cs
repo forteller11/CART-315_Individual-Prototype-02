@@ -15,7 +15,7 @@ namespace MarchingCubes.Systems
             Entities.WithAll<MarchingChunk, Translation>().ForEach((Entity entity) =>
             {
                 DebugDrawChunk(ecs.GetComponentData<Translation>(entity));
-                Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
+                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
             });
             
         }
@@ -23,7 +23,7 @@ namespace MarchingCubes.Systems
         static void DebugDrawChunk(Translation pos)
         {
             float3 p = pos.Value;
-            var w = SpawnChunks.CHUNK_SIZE/2;
+            var w = (SpawnChunks.CHUNK_SIZE/2)*.98f;
             
             //points on chunk cube
             var bl1 = new float3(-w, -w, w);
@@ -36,27 +36,27 @@ namespace MarchingCubes.Systems
             var tr2 = new float3(w, w, -w);
             var tl2 = new float3(-w, w, -w);
                 
-            var sqr1Col = new Color(1,0,0);
-            var sqr2Col = new Color(0,1,0);
-            var sqrConnectCol = new Color(0,0,1);
+            var leftCol = new Color(.2f,.4f,1);
+            var rightCol = new Color(1,.3f,.2f);
+            var vertCol = new Color(1,1,0);
                 
             //sqr 1
-            Debug.DrawLine(bl1 + p,br1 + p, sqr1Col);
-            Debug.DrawLine(br1 + p,tr1 + p, sqr1Col);
-            Debug.DrawLine(tr1 + p,tl1 + p, sqr1Col);
-            Debug.DrawLine(tl1 + p,bl1 + p, sqr1Col);
+            Debug.DrawLine(bl1 + p,br1 + p, vertCol);
+            Debug.DrawLine(br1 + p,tr1 + p, rightCol);
+            Debug.DrawLine(tr1 + p,tl1 + p, vertCol);
+            Debug.DrawLine(tl1 + p,bl1 + p, leftCol);
                 
             //sqr2
-            Debug.DrawLine(bl2 + p,br2 + p, sqr2Col);
-            Debug.DrawLine(br2 + p,tr2 + p, sqr2Col);
-            Debug.DrawLine(tr2 + p,tl2 + p, sqr2Col);
-            Debug.DrawLine(tl2 + p,bl2 + p, sqr2Col);
+            Debug.DrawLine(bl2 + p,br2 + p, vertCol);
+            Debug.DrawLine(br2 + p,tr2 + p, rightCol);
+            Debug.DrawLine(tr2 + p,tl2 + p, vertCol);
+            Debug.DrawLine(tl2 + p,bl2 + p, leftCol);
                 
             //cnnect the sqrs
-            Debug.DrawLine(bl1 + p,bl2 + p, sqrConnectCol);
-            Debug.DrawLine(br1 + p,br2 + p, sqrConnectCol);
-            Debug.DrawLine(tr1 + p,tr2 + p, sqrConnectCol);
-            Debug.DrawLine(tl1 + p,tl2 + p, sqrConnectCol);
+            Debug.DrawLine(bl1 + p,bl2 + p, leftCol);
+            Debug.DrawLine(br1 + p,br2 + p, rightCol);
+            Debug.DrawLine(tr1 + p,tr2 + p, rightCol);
+            Debug.DrawLine(tl1 + p,tl2 + p, leftCol);
         }
         
     }

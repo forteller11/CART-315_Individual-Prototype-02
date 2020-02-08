@@ -10,7 +10,7 @@ namespace MarchingCubes
     public class SpawnChunks : MonoBehaviour
     {
         public static int POINTS_IN_CHUNKS = 8;
-        public static float CHUNK_SIZE = 4;
+        public static float CHUNK_SIZE = 1;
         public int3 ChunksToSpawn = new int3(4,3,4);
         public Mesh Mesh;
         public Material Material;
