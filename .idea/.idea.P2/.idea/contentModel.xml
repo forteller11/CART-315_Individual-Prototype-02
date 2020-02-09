@@ -13,6 +13,7 @@
               <e p="ChunkIndex.cs" t="Include" />
               <e p="ChunkRenderer.cs" t="Include" />
               <e p="MarchingPoint.cs" t="Include" />
+              <e p="Tag_Player.cs" t="Include" />
             </e>
             <e p="Extensions.cs" t="Include" />
             <e p="SpawnChunks.cs" t="Include" />
@@ -20,6 +21,7 @@
               <e p="ChunkDebugger.cs" t="Include" />
             </e>
           </e>
+          <e p="PlayerMovement.cs" t="Include" />
           <e p="SpawnEntities.cs" t="Include" />
           <e p="SSpawn.cs" t="Include" />
         </e>
