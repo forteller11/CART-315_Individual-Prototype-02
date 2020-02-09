@@ -70,7 +70,7 @@ namespace MarchingCubes.Systems
         {
             var value = point.Density;
             var p = pos.Value;
-            var col = new Color(value, value, value,1f);
+            var col = new Color(1, 1, 1-value,1f);
             
             Debug.DrawLine(p,p + new float3(0.1f), col);
         }

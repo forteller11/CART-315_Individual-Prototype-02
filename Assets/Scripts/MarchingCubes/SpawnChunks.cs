@@ -9,8 +9,7 @@ namespace MarchingCubes
 {
     public class SpawnChunks : MonoBehaviour
     {
-        public static int POINTS_IN_ROW = 3;
-        public static int POINTS_IN_CHUNKS = POINTS_IN_ROW*POINTS_IN_ROW*POINTS_IN_ROW;
+        public int PointsInRow = 3;
         public static float CHUNK_SIZE = 4;
         public int3 ChunksToSpawn = new int3(2,2,2);
         
@@ -18,6 +17,7 @@ namespace MarchingCubes
         public Material Material;
         void Start()
         {
+            
             var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             var chunkArchetype = ecsManager.CreateArchetype(
                 typeof(Translation),
@@ -56,8 +56,9 @@ namespace MarchingCubes
                 });
             });
             
-            
-                int3 pointsToSpawn = ChunksToSpawn * POINTS_IN_ROW;
+                int3 pointsToSpawn = ChunksToSpawn * (PointsInRow);
+                var halfOfAChunk = (new float3(1,1,1)*CHUNK_SIZE)/2f;
+                float toIncrement = (float) CHUNK_SIZE / (PointsInRow-1);
                 var pointEntities = ecsManager.CreateEntity(pointArchetype, pointsToSpawn.Volume(), Allocator.Temp);
 
                 pointEntities.IndexAsIf3D(new int3(pointsToSpawn), (point, index) =>
@@ -65,7 +66,8 @@ namespace MarchingCubes
 
                     ecsManager.SetName(point, $"Point [{index.x}, {index.y}, {index.z}]");
                     
-                    var position = (new float3(index.x, index.y, index.z) * CHUNK_SIZE) / POINTS_IN_ROW;
+                    var position = (new float3(index.x, index.y, index.z) * toIncrement) - halfOfAChunk;
+
                     ecsManager.SetComponentData(point, new Translation
                     {
                         Value = position
