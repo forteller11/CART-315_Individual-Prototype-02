@@ -13,7 +13,7 @@ namespace MarchingCubes
         /// <param name="entities"></param>
         /// <param name="dimensions"> dimensions of 3D array</param>
         /// <param name="action"> action to perform</param>
-        public static void IndexAsIf3D(this NativeArray<Entity> entities, int3 dimensions, Action<Entity, int3> action)
+        public static void IndexAsIf3D(this NativeArray<Entity> entities, int3 dimensions, Action<Entity, int3, int> action)
         {
             for (int i = 0; i < dimensions.x; i++)
             {
@@ -26,13 +26,14 @@ namespace MarchingCubes
                         int kk = (k);
                         int index = ii + jj + kk;
                         
-                        action.Invoke(entities[index], new int3(i,j,k));
+                        action.Invoke(entities[index], new int3(i,j,k), index);
                     }
                 }
             }
         }
+
         
-        public static void IndexAsIf4D(this NativeArray<Entity> entities, int4 dimensions, Action<Entity, int4> action)
+        public static void IndexAsIf4D(this NativeArray<Entity> entities, int4 dimensions, Action<Entity, int4, int> action)
         {
             for (int i = 0; i < dimensions.x; i++)
             {
@@ -48,16 +49,15 @@ namespace MarchingCubes
                             int ww = w;
                             int index = ii + jj + kk + ww;
 
-                            action.Invoke(entities[index], new int4(i,j,k,w));
+                            action.Invoke(entities[index], new int4(i,j,k,w), index);
                         }
                     }
                 }
             }
         }
 
-        public static int Volume(this int3 integers)
-        {
-            return integers.x * integers.y * integers.z;
-        }
+        public static int Volume(this int3 n) =>  n.x * n.y * n.z; 
+        public static int Volume(this int4 n) =>  n.x * n.y * n.z * n.w; 
+
     }
 }

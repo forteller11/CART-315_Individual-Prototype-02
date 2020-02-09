@@ -4,12 +4,15 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using Random = Unity.Mathematics.Random;
 
 namespace MarchingCubes.Systems
 {
 
     public class ChunkDebugger : ComponentSystem
     {
+        private Random _random = new Random(10);
+
         protected override void OnUpdate()
         {
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
@@ -66,13 +69,17 @@ namespace MarchingCubes.Systems
             Debug.DrawLine(tl1 + p,tl2 + p, leftCol);
         }
 
-        static void DebugDrawPoint(Translation pos, MarchingPoint point)
+        void DebugDrawPoint(Translation pos, MarchingPoint point)
         {
             var value = point.Density;
             var p = pos.Value;
             var col = new Color(1, 1, 1-value,1f);
-            
-            Debug.DrawLine(p,p + new float3(0.1f), col);
+            var len = 0.07f;
+            float3 offset = new float3(
+                _random.NextFloat(-len,len),
+                _random.NextFloat(-len,len),
+                _random.NextFloat(-len,len));
+            Debug.DrawLine(p,p + offset, col);
         }
         
     }
