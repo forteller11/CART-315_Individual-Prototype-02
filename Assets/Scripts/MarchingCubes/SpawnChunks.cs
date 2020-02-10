@@ -1,4 +1,5 @@
-﻿using MarchingCubes.Systems;
+﻿using System;
+using MarchingCubes.Systems;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
@@ -24,13 +25,17 @@ namespace MarchingCubes
         
         public Mesh Mesh;
         public Material Material;
+
+        BlobAssetStore _blobAssetStore;
         void Start()
         {
-            var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             
-            //var conversionSettings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
-            Entity chunkEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(ChunkGameObjectPrefab, World.DefaultGameObjectInjectionWorld);
-
+            var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            _blobAssetStore = new BlobAssetStore();
+            Debug.LogWarning("if physics acts weird it might be because you only have one blob asset for all chunks and are disposing it OnDestroy");
+            var conversionSettings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
+            Entity chunkEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(ChunkGameObjectPrefab, conversionSettings);
+            
             ecsManager.AddComponent<ChunkIndex>(chunkEntity);
  
             ecsManager.AddComponent<Scale>(chunkEntity);
@@ -122,7 +127,6 @@ namespace MarchingCubes
                 });
                     
             });
-            
             chunkSpawnDatas.Dispose();
             chunkEntities.Dispose();
             pointEntities.Dispose();
@@ -144,10 +148,17 @@ namespace MarchingCubes
             }
         }
 
+        private void OnDestroy()
+        {
+            _blobAssetStore.Dispose();
+        }
+
         void Update()
         {
             ChunkDebugger.DebugDraw = DebugDraw;
         }
+        
+        
     }
     
     
