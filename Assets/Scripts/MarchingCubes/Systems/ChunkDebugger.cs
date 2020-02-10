@@ -11,12 +11,16 @@ namespace MarchingCubes.Systems
 
     public class ChunkDebugger : ComponentSystem
     {
+        public static bool DebugDraw = false;
         private Random _random = new Random(10);
         private float modR = 2;
         private float modG = 3;
         private float modB = 4;
         protected override void OnUpdate()
         {
+            if (DebugDraw == false)
+                return;
+
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             Entities.WithAll<Translation, RenderMesh, ChunkIndex>().ForEach((Entity entity) =>
             {
@@ -57,7 +61,7 @@ namespace MarchingCubes.Systems
             var b = 1/((index.Index.z % modB)+1);
             
             var col = new Color(r, g, b,1);
-            Debug.Log(col);
+  
             var leftCol = new Color(.2f,.4f,1);
             var rightCol = new Color(1,.3f,.2f);
             var vertCol = new Color(1,1,0);

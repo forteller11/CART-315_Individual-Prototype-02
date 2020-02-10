@@ -1,38 +1,59 @@
-﻿using Unity.Collections;
+﻿using MarchingCubes.Systems;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
+using Unity.Physics;
 using Unity.Rendering;
 using Unity.Transforms;
 using UnityEngine;
+using Collider = Unity.Physics.Collider;
+using Material = UnityEngine.Material;
 
 namespace MarchingCubes
 {
     public class SpawnChunks : MonoBehaviour
     {
+        public GameObject ChunkGameObjectPrefab;
         public int PointsInRow = 3;
         public static float CHUNK_SIZE = 4;
         public int3 ChunksToSpawn = new int3(2,2,2);
+
+        public bool DebugDraw = false;
+
+        public ConvertToEntity ChunkPrefab;
         
         public Mesh Mesh;
         public Material Material;
         void Start()
         {
-            
             var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            var chunkArchetype = ecsManager.CreateArchetype(
-                typeof(Translation),
-                typeof(Rotation),
-                typeof(RenderMesh),
-                typeof(LocalToWorld),
-                typeof(ChunkIndex)
-            );
+            
+            //var conversionSettings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, null);
+            Entity chunkEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(ChunkGameObjectPrefab, World.DefaultGameObjectInjectionWorld);
+
+            ecsManager.AddComponent<ChunkIndex>(chunkEntity);
+ 
+            ecsManager.AddComponent<Scale>(chunkEntity);
+
+//            var chunkArchetype = ecsManager.CreateArchetype(
+//                typeof(Translation),
+//                typeof(Rotation),
+//                typeof(RenderMesh),
+//                typeof(LocalToWorld),
+//                typeof(ChunkIndex),
+//                typeof(PhysicsCollider)
+//            );
+
+            
             var pointArchetype = ecsManager.CreateArchetype(
                 typeof(MarchingPoint),
                 typeof(Translation),
                 typeof(ChunkIndex)
             );
+            NativeArray<Entity> chunkEntities = new NativeArray<Entity>(ChunksToSpawn.Volume(), Allocator.Temp);
+            for (int i = 0; i < chunkEntities.Length; i++)
+                chunkEntities[i] = ecsManager.Instantiate(chunkEntity);
             
-            var chunkEntities = ecsManager.CreateEntity(chunkArchetype, ChunksToSpawn.Volume(), Allocator.Temp);
             NativeArray<ChunkSpawnData> chunkSpawnDatas = new NativeArray<ChunkSpawnData>(ChunksToSpawn.Volume(), Allocator.Temp);
             
             var halfOfAChunk = (new float3(1,1,1)*CHUNK_SIZE)/2f;
@@ -47,13 +68,16 @@ namespace MarchingCubes
                 
                 chunkSpawnDatas[indexArr] = new ChunkSpawnData(chunkPos, chunkIndex);
                 
-                ecsManager.SetSharedComponentData(chunk, new RenderMesh
+                ecsManager.SetComponentData(chunk, new Scale
                 {
-                    material = Material,
-                    mesh = Mesh
+                    Value = CHUNK_SIZE
                 });
+//                ecsManager.SetSharedComponentData(chunk, new RenderMesh
+//                {
+//                    material = Material,
+//                    mesh = Mesh
+//                });
 
-                
                 ecsManager.SetComponentData(chunk, new Translation
                 {
                     Value = chunkPos
@@ -63,6 +87,12 @@ namespace MarchingCubes
                 {
                     Index = chunkIndex
                 });
+                
+//                ecsManager.SetComponentData(chunk, new PhysicsCollider
+//                {
+//                    Value = new Collider();
+//                    Value = new BlobAssetReference<Collider>();
+//                });
 
 
             });
@@ -92,7 +122,7 @@ namespace MarchingCubes
                 });
                     
             });
-
+            
             chunkSpawnDatas.Dispose();
             chunkEntities.Dispose();
             pointEntities.Dispose();
@@ -112,6 +142,11 @@ namespace MarchingCubes
                 Position = position;
                 Index = index;
             }
+        }
+
+        void Update()
+        {
+            ChunkDebugger.DebugDraw = DebugDraw;
         }
     }
     
