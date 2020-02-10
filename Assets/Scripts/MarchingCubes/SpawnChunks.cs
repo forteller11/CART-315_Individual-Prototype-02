@@ -66,7 +66,7 @@ namespace MarchingCubes
 
             chunkEntities.IndexAsIf3D(ChunksToSpawn, (chunk, indexSpatial, indexArr) =>
             {
-                ecsManager.SetName(chunk, $"Chunk [{indexSpatial.x}, {indexSpatial.y}, {indexSpatial.z}]");
+                ecsManager.SetName(chunk, $"Chunk [{indexSpatial.x}, {indexSpatial.y}, {indexSpatial.z}] : {indexArr}");
                 
                 var chunkPos = new float3(indexSpatial.x, indexSpatial.y, indexSpatial.z) * CHUNK_SIZE;
                 var chunkIndex = GetChunkIndex(chunkPos, CHUNK_SIZE);
@@ -127,6 +127,8 @@ namespace MarchingCubes
                 });
                     
             });
+            
+            ecsManager.DestroyEntity(chunkEntity);
             chunkSpawnDatas.Dispose();
             chunkEntities.Dispose();
             pointEntities.Dispose();
