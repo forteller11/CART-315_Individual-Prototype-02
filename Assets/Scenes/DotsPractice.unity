@@ -150,10 +150,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8253d1b55a8d46a1a30e61569be2fcf4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
+    type: 3}
+  PointsInRow: 3
   ChunksToSpawn:
     x: 2
     y: 2
     z: 2
+  DebugDraw: 0
+  ChunkPrefab: {fileID: 0}
   Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
   Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
 --- !u!4 &233439848

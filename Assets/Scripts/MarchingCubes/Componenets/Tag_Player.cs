@@ -3,7 +3,7 @@
 namespace MarchingCubes
 {
     [GenerateAuthoringComponent]
-    public struct Tag_Player
+    public struct Tag_Player : IComponentData
     {
         
     }

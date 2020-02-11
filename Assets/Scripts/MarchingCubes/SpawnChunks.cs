@@ -14,6 +14,7 @@ namespace MarchingCubes
 {
     public class SpawnChunks : MonoBehaviour
     {
+        [SerializeField]
         public GameObject ChunkGameObjectPrefab;
         public int PointsInRow = 3;
         public static float CHUNK_SIZE = 4;
@@ -75,7 +76,7 @@ namespace MarchingCubes
                 
                 ecsManager.SetComponentData(chunk, new Scale
                 {
-                    Value = 1
+                    Value = CHUNK_SIZE
                 });
 //                ecsManager.SetSharedComponentData(chunk, new RenderMesh
 //                {
@@ -92,7 +93,7 @@ namespace MarchingCubes
                 {
                     Index = chunkIndex
                 });
-                
+
 //                ecsManager.SetComponentData(chunk, new PhysicsCollider
 //                {
 //                    Value = new Collider();
