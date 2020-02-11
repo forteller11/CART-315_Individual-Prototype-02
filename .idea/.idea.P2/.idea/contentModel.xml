@@ -13,10 +13,10 @@
             <e p="Componenets" t="Include">
               <e p="ChunkIndex.cs" t="Include" />
               <e p="ChunkRenderer.cs" t="Include" />
-              <e p="MakeGameObjectChild.cs" t="Include" />
               <e p="MarchingPoint.cs" t="Include" />
               <e p="Tag_Player.cs" t="Include" />
             </e>
+            <e p="CreateAndChildGameObject.cs" t="Include" />
             <e p="Extensions.cs" t="Include" />
             <e p="SpawnChunks.cs" t="Include" />
             <e p="Systems" t="Include">
