@@ -33,22 +33,34 @@ namespace MarchingCubes
             Debug.Log($"--------------------");
             Debug.Log($"linear: {inputLinear}");
             Debug.Log($"angular: {inputAngular}");
-            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation) =>
+            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation, ref Translation translation) =>
             { 
     
                 velocity.Angular += angularToAdd * input.AngularSensitivty;
 
                 //var forward = Quaternion.LookRotation(Quaternion.ToEulerAngles(rotation.Value));
                 //float3 linearVelocityRelative = forward * inputLinear * linearVelocityAbsolute;
-                velocity.Linear += linearVelocityAbsolute * input.LinearSensitivity;
+             
+                
+                //movement controller
+                float3 forwardVectorAbs = new float3(0,0,1);
+                float3 rightVectorAbs = new float3(1,0,0);
+                
+                var rotMat = new float3x3(rotation.Value);
+                
+                float3 forwardVectorRelative = math.mul(rotMat, forwardVectorAbs);
+                float3 rightVectorRelative = math.mul(rotMat, rightVectorAbs);
+                float3 noVerticalMovement = new float3(1,0,1);
+                
+                
+                Debug.DrawLine(translation.Value, translation.Value + forwardVectorRelative*10000, Color.yellow);
+                Debug.DrawLine(translation.Value, translation.Value + rightVectorRelative*100, Color.red);
+    
+                velocity.Linear += forwardVectorRelative   * noVerticalMovement * input.LinearSensitivity.z * inputLinear.y;
+                velocity.Linear += rightVectorRelative * noVerticalMovement * input.LinearSensitivity.x * inputLinear.x;
+       
 
 
-                //rotation.Value.
-                   // quaternion quarternion;
-                //quarternion.value.
-                    //Unity.Transforms.
-
-                    
             });
             
             _previousMousePosition = currentMousePosition;

@@ -754,7 +754,6 @@ GameObject:
   - component: {fileID: 895091223}
   - component: {fileID: 895091222}
   - component: {fileID: 895091221}
-  - component: {fileID: 895091220}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -762,19 +761,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &895091220
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895091219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!114 &895091221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -808,7 +794,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_MotionType: 0
   m_Mass: 1
-  m_LinearDamping: 1
+  m_LinearDamping: 20
   m_AngularDamping: 50
   m_InitialLinearVelocity:
     x: 0
@@ -929,9 +915,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LinearSensitivity:
-    x: 0.1
-    y: 0.1
-    z: 0.1
+    x: 3
+    y: 1
+    z: 3
   AngularSensitivty:
     x: 0.1
     y: 0.1
