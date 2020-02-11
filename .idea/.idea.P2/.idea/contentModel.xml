@@ -27,6 +27,7 @@
             </e>
           </e>
           <e p="PlayerMovement.cs" t="Include" />
+          <e p="PlayerMovementMono.cs" t="Include" />
           <e p="SpawnEntities.cs" t="Include" />
           <e p="SSpawn.cs" t="Include" />
         </e>

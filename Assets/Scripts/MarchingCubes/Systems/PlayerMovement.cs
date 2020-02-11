@@ -11,13 +11,11 @@ namespace MarchingCubes
     public class PlayerMovement : ComponentSystem
     {
         float2 _previousMousePosition = float2.zero;
-        public float MovementSensitivity = 0.1f;
-        public float RotationSensitivity = 0.1f;
         private PlayerControls _input;
-        protected override void OnStartRunning()
-        {
-            _input = new PlayerControls();
-        }
+
+        protected override void OnCreate() => _input = new PlayerControls();
+        protected override void OnStartRunning() => _input.Enable();
+        protected override void OnStopRunning() =>_input.Disable();
 
         protected override void OnUpdate()
         {
@@ -26,7 +24,8 @@ namespace MarchingCubes
             float2 deltaMousePosition = _previousMousePosition - currentMousePosition;
 
             var inputAngular = _input.PlayerMovement.Rotate.ReadValue<Vector2>();
-            float3 angularToAdd = new float3(inputAngular.x, inputAngular.y, 0);
+            float3 angularToAdd = new float3(-inputAngular.y, -inputAngular.x, 0);
+            
             
             var inputLinear = _input.PlayerMovement.Translate.ReadValue<Vector2>();
             float3 linearVelocityAbsolute = new float3(inputLinear.x, 0, inputLinear.y);
@@ -34,12 +33,22 @@ namespace MarchingCubes
             Debug.Log($"--------------------");
             Debug.Log($"linear: {inputLinear}");
             Debug.Log($"angular: {inputAngular}");
-            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input) =>
-            {
+            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation) =>
+            { 
+    
                 velocity.Angular += angularToAdd * input.AngularSensitivty;
-                float3 linearVelocityRelative = math.mul(velocity.Angular, linearVelocityAbsolute);
+
+                //var forward = Quaternion.LookRotation(Quaternion.ToEulerAngles(rotation.Value));
+                //float3 linearVelocityRelative = forward * inputLinear * linearVelocityAbsolute;
                 velocity.Linear += linearVelocityAbsolute * input.LinearSensitivity;
 
+
+                //rotation.Value.
+                   // quaternion quarternion;
+                //quarternion.value.
+                    //Unity.Transforms.
+
+                    
             });
             
             _previousMousePosition = currentMousePosition;

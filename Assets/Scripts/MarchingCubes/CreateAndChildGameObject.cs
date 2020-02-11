@@ -25,7 +25,7 @@ public class CreateAndChildGameObject : MonoBehaviour
         
         ecs.SetComponentData(_parent, new Translation { Value = transform.position });
         ecs.SetComponentData(_parent, new Rotation    { Value = transform.rotation });
-        
+
     }
     
     void Update()
