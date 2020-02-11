@@ -396,7 +396,7 @@ MonoBehaviour:
     z: 2
   DebugDraw: 0
   ChunkPrefab: {fileID: 0}
-  Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 3}
   Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
 --- !u!4 &233439848
 Transform:
@@ -753,7 +753,6 @@ GameObject:
   - component: {fileID: 895091223}
   - component: {fileID: 895091222}
   - component: {fileID: 895091221}
-  - component: {fileID: 895091224}
   - component: {fileID: 895091220}
   m_Layer: 0
   m_Name: Player
@@ -780,6 +779,7 @@ MonoBehaviour:
   Angular:
     x: 140
     y: 140
+  Build: 0
 --- !u!114 &895091221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -921,19 +921,6 @@ MonoBehaviour:
       m_Override: 0
       m_Value: 0000000000000000
   m_ConvexRadius_Deprecated: -1
---- !u!114 &895091224
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 895091219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea7d7495833204790ba1d3a8755397f8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConversionMode: 0
 --- !u!4 &895091225
 Transform:
   m_ObjectHideFlags: 0
@@ -1088,7 +1075,7 @@ MonoBehaviour:
   RanSpeed: 0.81
   RanScale: 0.07
   SlowDownBy: 0.99
-  Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 3}
   Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
 --- !u!4 &1009099821
 Transform:

@@ -14,21 +14,11 @@ namespace MarchingCubes.Systems
 {
     public class ChangePointDensity : JobComponentSystem
     {
-        private float _buildRadius = 4f;
-
-        private NativeArray<float3> _hitTrackers;
-//        private Unity.Physics.Systems.BuildPhysicsWorld _physicsWorldSystem;
-//        private CollisionWorld _collisionWorld;
-        
-//        protected override void OnStartRunning()
-//        {
-//            var _buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
-//            var _collisionWorld = _buildPhysicsWorld.PhysicsWorld.CollisionWorld;
-//            
-//        }
-
-       
-
+        protected override void OnStartRunning()
+        {
+            base.OnStartRunning();
+            Debug.Log("CHnage Point Desnity Started running!");
+        }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
         {
@@ -36,37 +26,40 @@ namespace MarchingCubes.Systems
             var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
 
-            var jh = Entities.WithAll<Input>().ForEach((ref Translation translation, ref Input input) =>
+            var camPos = Camera.main.gameObject.transform.position;
+            var camDir = Camera.main.gameObject.transform.forward;
+            var jh = Entities.ForEach((ref Translation translation, ref Input input) =>
             {
+                Debug.Log("Found an input entity");
                 
                 RaycastInput raycastInput = new RaycastInput
                 {
-                    Start = (float3) UnityEngine.Camera.main.gameObject.transform.position,
-                    End = (float3) (UnityEngine.Camera.main.gameObject.transform.forward) * 100,
+                    Start = (float3) camPos,
+                    End = (float3) camDir * 100,
                     Filter = CollisionFilter.Default
                 };
+                
                 RaycastHit hitChunk;
                 if (collisionWorld.CastRay(raycastInput, out hitChunk))
                 {
                     PointDistanceInput pointDistanceInput = new PointDistanceInput
                     {
                         Position = hitChunk.Position,
-                        MaxDistance = _buildRadius,
+                        MaxDistance = 4f,
                         Filter = CollisionFilter.Default
                     };
                     var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
                     if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
                     {
-                        _hitTrackers.Dispose();
-                        _hitTrackers = new NativeArray<float3>(distanceChunkHits.Length, Allocator.Persistent);
+                        
+                        Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
                         for (int i = 0; i < distanceChunkHits.Length; i++)
                         {
-                            _hitTrackers[i] = distanceChunkHits[i].Position;
-                            //use entity command buffer to draw debug points
+                            
+                            //get all points in chunk
                         }
                   
                     }
-          
                     
                     //find point of contact
              
