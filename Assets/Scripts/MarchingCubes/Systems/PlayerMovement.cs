@@ -12,6 +12,8 @@ namespace MarchingCubes
     {
         float2 _previousMousePosition = float2.zero;
         private PlayerControls _input;
+        private float3 _forwardCache = new float3(0, 1, 1);
+        private float3 _upCache = new float3(0,1,0);
 
         protected override void OnCreate() => _input = new PlayerControls();
         protected override void OnStartRunning() => _input.Enable();
@@ -51,7 +53,11 @@ namespace MarchingCubes
                 
                 var rotMat2 = new float3x3(rotation.Value);
                 var r2 = Quaternion.AngleAxis(inputAngular.y, math.mul(rotMat2, forwardVectorAbs));
+                //_forwardCache
                 rotation.Value = math.mul(rotation.Value, r2);
+                
+
+                //Quaternion.LookRotation()
                 
 
       
