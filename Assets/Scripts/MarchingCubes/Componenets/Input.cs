@@ -8,5 +8,6 @@ namespace MarchingCubes
     {
         public float2 Linear;
         public float2 Angular;
+        public float Build;
     }
 }
