@@ -1,20 +1,24 @@
 ﻿using Unity.Entities;
+using Unity.Jobs;
 using Unity.Transforms;
 
 namespace MarchingCubes.Systems
 {
     public class ParentGameObjectsToEntities
     {
-        public class PlayerMovement : ComponentSystem
+        public class PlayerMovement : JobComponentSystem
         {
-
-            protected override void OnUpdate()
+            
+            protected override JobHandle OnUpdate(JobHandle inputDeps)
             {
-                Entities.ForEach((ref MakeGameObjectChild makeChild, in Translation translation, in Rotation rotation) =>
-                {
-                    makeChild.Transform.position = translation.Value;
-                    makeChild.Transform.rotation = rotation.Value;
-                });
+                var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+                return Entities.ForEach(
+                    (in Entity entity, in Translation translation, in Rotation rotation) =>
+                    {
+                        var makeChild = ecs.GetSharedComponentData<MakeGameObjectChild>(entity);
+                        makeChild.Transform.position = translation.Value;
+                        makeChild.Transform.rotation = rotation.Value;
+                    }).Schedule(inputDeps);
             }
         }
     }

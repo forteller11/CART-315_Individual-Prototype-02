@@ -3,9 +3,9 @@ using UnityEngine;
 
 namespace MarchingCubes
 {
-    [GenerateAuthoringComponent]
-    public struct MakeGameObjectChild : IComponentData
+    //[GenerateAuthoringComponent]
+    public struct MakeGameObjectChild : ISharedComponentData
     {
-        public Transform Transform;
+        //public Transform Transform;
     }
 }

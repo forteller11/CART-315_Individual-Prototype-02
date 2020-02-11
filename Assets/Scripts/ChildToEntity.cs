@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class ChildToEntity : MonoBehaviour
 {
+    [SerializeField]
     public Entity ParentEntity;
     
     void Update()
