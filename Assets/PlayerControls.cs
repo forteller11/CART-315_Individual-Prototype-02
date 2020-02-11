@@ -274,7 +274,7 @@ public class @PlayerControls : IInputActionCollection, IDisposable
                     ""id"": ""57df8fe2-7268-44e1-acad-4ca76bf10ca2"",
                     ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""ScaleVector2(x=0.02,y=0.02)"",
                     ""groups"": """",
                     ""action"": ""Rotate"",
                     ""isComposite"": false,

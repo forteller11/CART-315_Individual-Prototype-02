@@ -23,41 +23,53 @@ namespace MarchingCubes
             float2 currentMousePosition = new float2(UnityEngine.Input.mousePosition.x, UnityEngine.Input.mousePosition.y);
             float2 deltaMousePosition = _previousMousePosition - currentMousePosition;
 
-            var inputAngular = _input.PlayerMovement.Rotate.ReadValue<Vector2>();
-            float3 angularToAdd = new float3(-inputAngular.y, -inputAngular.x, 0);
-            
-            
-            var inputLinear = _input.PlayerMovement.Translate.ReadValue<Vector2>();
+            float2 inputAngular = _input.PlayerMovement.Rotate.ReadValue<Vector2>();
+
+
+            float2 inputLinear = _input.PlayerMovement.Translate.ReadValue<Vector2>();
             float3 linearVelocityAbsolute = new float3(inputLinear.x, 0, inputLinear.y);
+            var t = Time.DeltaTime;
             
             Debug.Log($"--------------------");
-            Debug.Log($"linear: {inputLinear}");
-            Debug.Log($"angular: {inputAngular}");
+            //Debug.Log($"linear: {inputLinear}");
+            //Debug.Log($"angular: {inputAngular}");
             Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation, ref Translation translation) =>
             { 
-    
-                velocity.Angular += angularToAdd * input.AngularSensitivty;
-
-                //var forward = Quaternion.LookRotation(Quaternion.ToEulerAngles(rotation.Value));
-                //float3 linearVelocityRelative = forward * inputLinear * linearVelocityAbsolute;
-             
+                float3 upVectorAbs = new float3(0,1,0);
+                   
                 
-                //movement controller
+                //rotate around upvectorabs
+                //then rotate around right vector abs
+                
+                float2 angularToAdd = inputAngular * input.Angular;
                 float3 forwardVectorAbs = new float3(0,0,1);
                 float3 rightVectorAbs = new float3(1,0,0);
                 
-                var rotMat = new float3x3(rotation.Value);
+                var rotMat1 = new float3x3(rotation.Value);
+                var r1 = Quaternion.AngleAxis(inputAngular.x, math.mul(rotMat1, upVectorAbs));
+                rotation.Value = math.mul(rotation.Value, r1);
                 
-                float3 forwardVectorRelative = math.mul(rotMat, forwardVectorAbs);
-                float3 rightVectorRelative = math.mul(rotMat, rightVectorAbs);
+                var rotMat2 = new float3x3(rotation.Value);
+                var r2 = Quaternion.AngleAxis(inputAngular.y, math.mul(rotMat2, forwardVectorAbs));
+                rotation.Value = math.mul(rotation.Value, r2);
+                
+
+      
+                //movement controller
+                
+                var rotMat3 = new float3x3(rotation.Value);
+
+              
+                float3 forwardVectorRelative = math.mul(rotMat3, forwardVectorAbs);
+                float3 rightVectorRelative = math.mul(rotMat3, rightVectorAbs);
                 float3 noVerticalMovement = new float3(1,0,1);
                 
                 
                 Debug.DrawLine(translation.Value, translation.Value + forwardVectorRelative*10000, Color.yellow);
                 Debug.DrawLine(translation.Value, translation.Value + rightVectorRelative*100, Color.red);
     
-                velocity.Linear += forwardVectorRelative   * noVerticalMovement * input.LinearSensitivity.z * inputLinear.y;
-                velocity.Linear += rightVectorRelative * noVerticalMovement * input.LinearSensitivity.x * inputLinear.x;
+                velocity.Linear += forwardVectorRelative   * noVerticalMovement * input.Linear.y * inputLinear.y * t;
+                velocity.Linear += rightVectorRelative * noVerticalMovement * input.Linear.x * inputLinear.x * t;
        
 
 

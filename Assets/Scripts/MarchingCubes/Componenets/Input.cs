@@ -3,10 +3,10 @@ using Unity.Mathematics;
 
 namespace MarchingCubes
 {
-    [GenerateAuthoringComponent]
+  [GenerateAuthoringComponent]
     public struct Input : IComponentData
     {
-        public float3 LinearSensitivity;
-        public float3 AngularSensitivty;
+        public float2 Linear;
+        public float2 Angular;
     }
 }
