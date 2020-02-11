@@ -57,7 +57,8 @@ namespace MarchingCubes
         }
 
         public static int Volume(this int3 n) =>  n.x * n.y * n.z; 
-        public static int Volume(this int4 n) =>  n.x * n.y * n.z * n.w; 
+        public static int Volume(this int4 n) =>  n.x * n.y * n.z * n.w;
+        public static int ToInt(this bool x) => (x) ? 1 : 0;
 
     }
 }

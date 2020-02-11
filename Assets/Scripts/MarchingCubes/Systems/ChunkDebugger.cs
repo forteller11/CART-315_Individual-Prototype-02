@@ -22,7 +22,7 @@ namespace MarchingCubes.Systems
                 return;
 
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            Entities.WithAll<Translation, RenderMesh, ChunkIndex>().ForEach((Entity entity) =>
+            Entities.ForEach((Entity entity) =>
             {
                 DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetSharedComponentData<ChunkIndex>(entity));
                 //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
