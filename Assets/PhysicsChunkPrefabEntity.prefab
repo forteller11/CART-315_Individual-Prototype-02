@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3448088159668750072}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 8.38, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
+  - {fileID: 2100000, guid: 7b64f647830089349afe155b76c06a3a, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -124,13 +124,13 @@ MonoBehaviour:
     z: 0.4
   m_CustomTags:
     Tag00: 1
-    Tag01: 0
-    Tag02: 0
-    Tag03: 0
-    Tag04: 0
-    Tag05: 0
-    Tag06: 0
-    Tag07: 0
+    Tag01: 1
+    Tag02: 1
+    Tag03: 1
+    Tag04: 1
+    Tag05: 1
+    Tag06: 1
+    Tag07: 1
 --- !u!114 &5555510725215548173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
     z: 1
   m_PrimitiveOrientation:
     Value:
-      x: -0
+      x: 0
       y: 0
       z: 0
     RotationOrder: 4
@@ -184,7 +184,7 @@ MonoBehaviour:
   m_MinimumSkinnedVertexWeight: 0.216
   m_ConvexHullGenerationParameters:
     m_SimplificationTolerance: 0.015
-    m_BevelRadius: 0
+    m_BevelRadius: 0.1
     m_MinimumAngle: 2.5000002
   m_CustomMesh: {fileID: 0}
   m_ForceUnique: 0
@@ -193,7 +193,7 @@ MonoBehaviour:
     m_Template: {fileID: 0}
     m_IsTrigger:
       m_Override: 0
-      m_Value: 0
+      m_Value: 1
     m_Friction:
       m_Override: 0
       m_Value:

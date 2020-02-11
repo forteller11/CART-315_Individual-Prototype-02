@@ -1,4 +1,7 @@
-﻿using Unity.Entities;
+﻿using System.Collections.Generic;
+using Unity.Collections;
+using Unity.Entities;
+using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics;
 using UnityEngine;
@@ -24,30 +27,35 @@ namespace MarchingCubes.Systems
             var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
             
-            var start = UnityEngine.Camera.main.gameObject.transform.position;
-            var end = start + UnityEngine.Camera.main.gameObject.transform.forward * 10f;
-            var filter = CollisionFilter.Default;
+            float3 start = (float3) UnityEngine.Camera.main.gameObject.transform.position;
+            float3 offset =   (float3)(UnityEngine.Camera.main.gameObject.transform.forward)*100;
+            CollisionFilter filter = CollisionFilter.Default;
 
             RaycastInput raycast = new RaycastInput
             {
                 Start = start,
-                End = end,
+                End = offset,
                 Filter = filter
             };
 
             var color = Color.green;
-            RaycastHit hit = new RaycastHit();
-            if (collisionWorld.CastRay(raycast, out hit))
+            NativeList<RaycastHit> hits = new NativeList<RaycastHit>(Allocator.Temp);
+            if (collisionWorld.CastRay(raycast, ref hits))
             {
-                Entity hitEntity =  buildPhysicsWorld.PhysicsWorld.Bodies[hit.RigidBodyIndex].Entity;
-                Debug.Log(ecs.GetName(hitEntity));
-                color = Color.red;
-                //hit.RigidBodyIndex
-                // Entity entity = _buildPhysicsWorld.
+                color += new Color(0,0,1);
+                Debug.Log("HIT");
+                foreach (var hit in hits)
+                {
+                    color += (Color.red - Color.green)/4;
+                    Entity e =  buildPhysicsWorld.PhysicsWorld.Bodies[hit.RigidBodyIndex].Entity;
+                    Debug.Log(ecs.GetName(e));
+                }
 
             }
-            
-            Debug.DrawRay(start, end, color);
+
+            hits.Dispose();
+            Debug.DrawLine(start,start+offset, color);
+            //Debug.DrawRay(start, end, color);
         }
     }
 }

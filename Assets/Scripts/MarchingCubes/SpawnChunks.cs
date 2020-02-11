@@ -75,7 +75,7 @@ namespace MarchingCubes
                 
                 ecsManager.SetComponentData(chunk, new Scale
                 {
-                    Value = CHUNK_SIZE
+                    Value = 1
                 });
 //                ecsManager.SetSharedComponentData(chunk, new RenderMesh
 //                {
