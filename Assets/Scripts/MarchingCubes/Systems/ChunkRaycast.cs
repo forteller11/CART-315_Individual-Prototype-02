@@ -44,12 +44,12 @@ namespace MarchingCubes.Systems
             if (collisionWorld.CastRay(raycast, ref hits))
             {
                 color += new Color(0,0,1);
-                Debug.Log("HIT");
+                //Debug.Log("HIT");
                 foreach (var hit in hits)
                 {
                     color += (Color.red - Color.green)/4;
                     Entity e =  buildPhysicsWorld.PhysicsWorld.Bodies[hit.RigidBodyIndex].Entity;
-                    Debug.Log(ecs.GetName(e));
+                    //Debug.Log(ecs.GetName(e));
                 }
 
             }
