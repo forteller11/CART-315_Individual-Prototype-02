@@ -1,25 +1,51 @@
-﻿using Unity.Entities;
+﻿using Unity.Collections;
+using Unity.Entities;
 using Unity.Jobs;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace MarchingCubes.Systems
 {
-    public class ParentGameObjectsToEntities
-    {
-        public class PlayerMovement : JobComponentSystem
+//        public class PlayerMovement : JobComponentSystem
+//        {
+//            
+//            protected override JobHandle OnUpdate(JobHandle inputDeps)
+//            {
+//
+//                var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+//                var jh = Entities.ForEach((in Entity entity, in Translation translation, in Rotation rotation) =>
+//                {
+//                    var makeChild = ecs.GetSharedComponentData<MakeGameObjectChild>(entity);
+//                    makeChild.Value.transform.position = translation.Value;
+//                    makeChild.Value.transform.rotation = rotation.Value;
+//
+//                }).Schedule(inputDeps);
+//
+//                return jh;
+//            }
+//
+//
+//
+//        }
+
+        public class PlayerMovement : ComponentSystem
         {
-            
-            protected override JobHandle OnUpdate(JobHandle inputDeps)
+            protected override void OnUpdate()
             {
                 var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-                return Entities.ForEach(
-                    (in Entity entity, in Translation translation, in Rotation rotation) =>
+                Entities.ForEach((entity) =>
+                {
+                    if (ecs.HasComponent<Translation>(entity) && ecs.HasComponent<Rotation>(entity) && ecs.HasComponent<MakeGameObjectChild>(entity))
                     {
                         var makeChild = ecs.GetSharedComponentData<MakeGameObjectChild>(entity);
-                        makeChild.Transform.position = translation.Value;
-                        makeChild.Transform.rotation = rotation.Value;
-                    }).Schedule(inputDeps);
+                        var translation = ecs.GetComponentData<Translation>(entity);
+                        var rotation = ecs.GetComponentData<Rotation>(entity);
+                        
+                        makeChild.Value.transform.position = translation.Value;
+                        makeChild.Value.transform.rotation = rotation.Value;
+                    }
+
+                });
             }
         }
-    }
 }
