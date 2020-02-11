@@ -4,7 +4,7 @@ using UnityEngine;
 namespace MarchingCubes
 {
     [GenerateAuthoringComponent]
-    public struct MakeGameObjectChild : ISharedComponentData
+    public struct MakeGameObjectChild : IComponentData
     {
         public GameObject Value;
     }

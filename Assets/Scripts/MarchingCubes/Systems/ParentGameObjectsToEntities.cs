@@ -37,7 +37,7 @@ namespace MarchingCubes.Systems
                 {
                     if (ecs.HasComponent<Translation>(entity) && ecs.HasComponent<Rotation>(entity) && ecs.HasComponent<MakeGameObjectChild>(entity))
                     {
-                        var makeChild = ecs.GetSharedComponentData<MakeGameObjectChild>(entity);
+                        var makeChild = ecs.GetComponentData<MakeGameObjectChild>(entity);
                         var translation = ecs.GetComponentData<Translation>(entity);
                         var rotation = ecs.GetComponentData<Rotation>(entity);
                         
