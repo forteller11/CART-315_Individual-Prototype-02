@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6584759304374828676}
   - component: {fileID: 5555510725215548173}
   - component: {fileID: 3418596803497001306}
-  - component: {fileID: 7308722232011215271}
+  - component: {fileID: 6899913201944811548}
   m_Layer: 0
   m_Name: PhysicsChunkPrefabEntity
   m_TagString: Untagged
@@ -218,7 +218,7 @@ MonoBehaviour:
       m_Override: 0
       m_Value: 0000000000000000
   m_ConvexRadius_Deprecated: -1
---- !u!114 &7308722232011215271
+--- !u!114 &6899913201944811548
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
