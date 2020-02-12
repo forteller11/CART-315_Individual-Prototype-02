@@ -20,15 +20,17 @@ namespace MarchingCubes.Systems
             CollidesWith = 1 << 0,
             GroupIndex = 0,
         };
+
+        private float _buildRadius = 1f;
+        private float _maxBuildRate = 0.05f;
+        private float _minBuildRate = 0;
         protected override void OnStartRunning()
         {
             base.OnStartRunning();
-            Debug.Log("CHnage Point Desnity Started running!");
         }
 
         protected override void OnUpdate()
         {
-          
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
@@ -37,8 +39,11 @@ namespace MarchingCubes.Systems
             var camPos = Camera.main.gameObject.transform.position;
             var camDir = Camera.main.gameObject.transform.forward;
             
-            EntityQuery queryPoints = GetEntityQuery(typeof(MarchingPoint), ComponentType.ReadOnly<ChunkIndex>());
-        
+            EntityQuery queryPoints = GetEntityQuery(
+                Unity.Entities.ComponentType.ReadWrite<MarchingPoint>(),
+                ComponentType.ReadOnly<ChunkIndex>(),
+                ComponentType.ReadOnly<Translation>());
+            
             Entities.ForEach((ref Translation translation, ref Input input) =>
             {
                 Debug.Log("Found an input entity");
@@ -49,7 +54,8 @@ namespace MarchingCubes.Systems
                     End = (float3) camDir * 100,
                     Filter = _chunkFilter
                 };
-//                
+
+                
                 RaycastHit hitChunk;
                 if (collisionWorld.CastRay(raycastInput, out hitChunk))
                 {
@@ -57,7 +63,7 @@ namespace MarchingCubes.Systems
                     PointDistanceInput pointDistanceInput = new PointDistanceInput
                     {
                         Position = hitChunk.Position,
-                        MaxDistance = 1f,
+                        MaxDistance = _buildRadius,
                         Filter = _chunkFilter
                     };
                     var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
@@ -78,24 +84,27 @@ namespace MarchingCubes.Systems
                             Debug.Log($"chunk index {chunkIndexOfHit}");
                             
                             var pointValues = queryPoints.ToComponentDataArray<MarchingPoint>(Allocator.TempJob);
-            
+                            var pointPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
                             var pointEntities = queryPoints.ToEntityArray(Allocator.TempJob);
                             
                             
                             for (int j = 0; j < pointEntities.Length; j++)
                             {
+                                var distToPoint = math.distance(hitChunk.Position, pointPositions[j].Value);
+                                if (distToPoint > _buildRadius)
+                                    continue;
+                                float densityIncrease = math.lerp(_maxBuildRate, _minBuildRate, distToPoint / _buildRadius);
                                 
-                                ecs.SetComponentData(pointEntities[j], new MarchingPoint
-                                {
-                                    Density = pointValues[j].Density + 0.01f
-                                });
+                                ecs.SetComponentData(pointEntities[j], new MarchingPoint { Density = pointValues[j].Density + densityIncrease });
+                                
                                 var pPos = ecs.GetComponentData<Translation>(pointEntities[j]).Value;
                                 Debug.DrawLine(pPos, pPos + new float3(.1f,.1f,.1f), new Color(0.67f, 1f, 0.73f,0.3f));
                             }
 
                             pointEntities.Dispose();
                             pointValues.Dispose();
-                            
+                            pointPositions.Dispose();
+
                         }
                     }
 

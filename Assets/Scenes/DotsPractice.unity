@@ -395,12 +395,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
     type: 3}
-  PointsInRow: 3
+  PointsInRow: 12
   ChunksToSpawn:
-    x: 2
+    x: 1
     y: 2
     z: 2
-  DebugDraw: 0
+  DebugDraw: 1
   ChunkPrefab: {fileID: 0}
   Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 3}
   Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
@@ -872,8 +872,8 @@ Camera:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0, g: 0.040356394, b: 0.103773594, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
