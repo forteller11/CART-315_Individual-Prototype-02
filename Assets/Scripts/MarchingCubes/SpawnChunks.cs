@@ -9,7 +9,7 @@ using Unity.Transforms;
 using UnityEngine;
 using Collider = Unity.Physics.Collider;
 using Material = UnityEngine.Material;
-
+    using Random = Unity.Mathematics.Random;
 namespace MarchingCubes
 {
     public class SpawnChunks : MonoBehaviour
@@ -29,12 +29,14 @@ namespace MarchingCubes
         [Header("Marching Cubes")] 
         [Range(0,1)]
         public float MarchingCubesThreshold = 0.5f;
+        [Range(0,1)]
+        public float InitialDensity = 0f;
         
 
         BlobAssetStore _blobAssetStore;
         void Start()
         {
-            
+            Random ran = new Random(300);
             var ecsManager = World.DefaultGameObjectInjectionWorld.EntityManager;
             _blobAssetStore = new BlobAssetStore();
             Debug.LogWarning("if physics acts weird it might be because you only have one blob asset for all chunks and are disposing it OnDestroy");
@@ -109,7 +111,7 @@ namespace MarchingCubes
                 
                 ecsManager.SetComponentData(point, new Translation { Value = worldPos });
                     
-                ecsManager.SetComponentData(point, new DensityCube ());
+                ecsManager.SetComponentData(point, new DensityCube (ran));
 
                 ecsManager.SetSharedComponentData(point, new ChunkData
                 {

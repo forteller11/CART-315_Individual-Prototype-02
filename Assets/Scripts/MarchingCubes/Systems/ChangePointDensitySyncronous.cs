@@ -57,7 +57,7 @@ namespace MarchingCubes.Systems
                 ComponentType.ReadOnly<Translation>());
             
             float buildInput = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
-            
+
             Entities.ForEach((ref Translation translation, ref Input input) =>
             {
                 //Debug.Log("Found an input entity");
@@ -125,7 +125,13 @@ namespace MarchingCubes.Systems
                                     float amountToDig = math.lerp(_maxBuildRate, _minBuildRate, distToDensity / _buildRadius);
                
                                     float densityDelta = buildInput * amountToDig;
-                                    densities.Add(densityDelta + density);
+                                    float densityToChange = densityDelta + density;
+                                    if (buildInput < 0 && densityToChange > 0)
+                                        densityToChange = 0;
+                                    
+                                    if (buildInput > 0 && densityToChange < 0)
+                                        densityToChange = 0;
+                                    densities.Add(densityToChange);
                                     //Debug.Log($"Density to Increase: {densityDelta}");
                                 });
                                     

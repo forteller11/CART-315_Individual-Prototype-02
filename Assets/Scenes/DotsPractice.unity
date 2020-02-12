@@ -395,15 +395,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
     type: 3}
-  PointsInRow: 12
+  PointsInRow: 3
   ChunksToSpawn:
     x: 1
-    y: 2
-    z: 2
+    y: 1
+    z: 1
   DebugDraw: 1
-  ChunkPrefab: {fileID: 0}
-  Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 3}
-  Material: {fileID: 2100000, guid: afd309130bc6df84c807927e2fc4dd33, type: 2}
+  BaseDensityAlpha: 0.1
+  BaseDensityVectorLength: 0.05
+  MarchingCubesThreshold: 0.086
+  InitialDensity: 0.355
 --- !u!4 &233439848
 Transform:
   m_ObjectHideFlags: 0
@@ -449,6 +450,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: Linear.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: Linear.y
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8472469735800098410, guid: 99a7cb076f81e234abf06dfd303956a3,
         type: 3}
