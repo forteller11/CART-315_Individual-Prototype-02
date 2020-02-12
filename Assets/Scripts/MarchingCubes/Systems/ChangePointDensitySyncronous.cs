@@ -51,7 +51,7 @@ namespace MarchingCubes.Systems
             var camDir = Camera.main.gameObject.transform.forward;
             
             EntityQuery queryPoints = GetEntityQuery(
-                Unity.Entities.ComponentType.ReadWrite<MarchingPoint>(),
+                Unity.Entities.ComponentType.ReadWrite<DensityCube>(),
                 ComponentType.ReadOnly<ChunkIndex>(),
                 ComponentType.ReadOnly<Translation>());
             
@@ -96,7 +96,7 @@ namespace MarchingCubes.Systems
                             queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
                             Debug.Log($"chunk index {chunkIndexOfHit}");
                             
-                            var pointValues = queryPoints.ToComponentDataArray<MarchingPoint>(Allocator.TempJob);
+                            var pointValues = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
                             var pointPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
                             var pointEntities = queryPoints.ToEntityArray(Allocator.TempJob);
                             
@@ -108,10 +108,10 @@ namespace MarchingCubes.Systems
                                     continue;
                                 float densityIncrease = buildValue * math.lerp(_maxBuildRate, _minBuildRate, distToPoint / _buildRadius);
                                 
-                                ecs.SetComponentData(pointEntities[j], new MarchingPoint { Density = pointValues[j].Density + densityIncrease });
+                                //ecs.SetComponentData(pointEntities[j], new DensityCube { DensityBL = pointValues[j].DensityBL + densityIncrease });
                                 
                                 var pPos = ecs.GetComponentData<Translation>(pointEntities[j]).Value;
-                                Debug.DrawLine(pPos, pPos + new float3(.1f,.1f,.1f), new Color(0.67f, 1f, 0.73f,0.3f));
+                                Debug.DrawLine(pPos, pPos + new float3(.04f,.04f,.04f), new Color(0.67f, 1f, 0.73f,0.3f));
                             }
 
                             pointEntities.Dispose();

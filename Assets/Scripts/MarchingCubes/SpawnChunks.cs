@@ -52,7 +52,7 @@ namespace MarchingCubes
 
             
             var pointArchetype = ecsManager.CreateArchetype(
-                typeof(MarchingPoint),
+                typeof(DensityCube),
                 typeof(Translation),
                 typeof(ChunkIndex)
             );
@@ -74,31 +74,17 @@ namespace MarchingCubes
                 
                 chunkSpawnDatas[indexArr] = new ChunkSpawnData(chunkPos, chunkIndex);
                 
-                ecsManager.SetComponentData(chunk, new Scale
-                {
-                    Value = CHUNK_SIZE
-                });
-//                ecsManager.SetSharedComponentData(chunk, new RenderMesh
-//                {
-//                    material = Material,
-//                    mesh = Mesh
-//                });
+                ecsManager.SetComponentData(chunk, new Scale { Value = CHUNK_SIZE });
 
-                ecsManager.SetComponentData(chunk, new Translation
-                {
-                    Value = chunkPos
-                });
+                ecsManager.SetComponentData(chunk, new Translation { Value = chunkPos });
                 
                 ecsManager.SetSharedComponentData(chunk, new ChunkIndex
                 {
-                    Index = chunkIndex
+                    Index = chunkIndex,
+                    ChunkWidth = CHUNK_SIZE,
+                    PointsInARow = PointsInRow
                 });
-
-//                ecsManager.SetComponentData(chunk, new PhysicsCollider
-//                {
-//                    Value = new Collider();
-//                    Value = new BlobAssetReference<Collider>();
-//                });
+                
 
 
             });
@@ -112,19 +98,15 @@ namespace MarchingCubes
                 var posWithinChunk = (new float3(indexSpatial.y, indexSpatial.z, indexSpatial.w) * toIncrement) - halfOfAChunk;
                 var worldPos = posWithinChunk + chunkSpawnDatas[indexSpatial.x].Position;
                 
-                ecsManager.SetComponentData(point, new Translation
-                {
-                    Value = worldPos
-                });
+                ecsManager.SetComponentData(point, new Translation { Value = worldPos });
                     
-                ecsManager.SetComponentData(point, new MarchingPoint
-                {
-                    Density = 0.0f
-                });
+                ecsManager.SetComponentData(point, new DensityCube ());
 
                 ecsManager.SetSharedComponentData(point, new ChunkIndex
                 {
-                    Index = chunkSpawnDatas[indexSpatial.x].Index
+                    Index = chunkSpawnDatas[indexSpatial.x].Index,
+                    ChunkWidth = CHUNK_SIZE,
+                    PointsInARow = PointsInRow
                 });
                     
             });

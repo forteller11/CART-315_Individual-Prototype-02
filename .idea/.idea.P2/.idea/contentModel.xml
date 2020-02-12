@@ -14,8 +14,8 @@
             <e p="Componenets" t="Include">
               <e p="ChunkIndex.cs" t="Include" />
               <e p="ChunkRenderer.cs" t="Include" />
+              <e p="DensityCube.cs" t="Include" />
               <e p="Input.cs" t="Include" />
-              <e p="MarchingPoint.cs" t="Include" />
             </e>
             <e p="CreateAndChildGameObject.cs" t="Include" />
             <e p="Extensions.cs" t="Include" />
