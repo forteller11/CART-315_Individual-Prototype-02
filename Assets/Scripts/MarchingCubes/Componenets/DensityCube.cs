@@ -11,20 +11,20 @@ namespace MarchingCubes
     public struct DensityCube : IComponentData
     {
 
-        public DensityCube(NativeList<float> densities)
+        public DensityCube(NativeList<float> densities) : this()
         {
             if (densities.Length != 8)
                 Debug.LogError("make sure native list has 8 elements!");
             
-            _FDL = densities[0]; 
-            _FDR = densities[1]; 
-            _FUL = densities[2]; 
-            _FUR = densities[3]; 
+            FDL = densities[0]; 
+            FDR = densities[1]; 
+            FUL = densities[2]; 
+            FUR = densities[3]; 
                 
-            _BDL = densities[4]; 
-            _BDR = densities[5]; 
-            _BUL = densities[6]; 
-            _BUR = densities[7]; 
+            BDL = densities[4]; 
+            BDR = densities[5]; 
+            BUL = densities[6]; 
+            BUR = densities[7]; 
         }
         //(forward/back, up/down, left/right)
         //values: 0-1

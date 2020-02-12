@@ -21,8 +21,8 @@ namespace MarchingCubes.Systems
             GroupIndex = 0,
         };
 
-        private float _buildRadius = 1f;
-        private float _maxBuildRate = 0.05f;
+        private float _buildRadius = 4f;
+        private float _maxBuildRate = 0.1f;
         private float _minBuildRate = 0;
         private PlayerControls _input;
         
@@ -114,7 +114,7 @@ namespace MarchingCubes.Systems
                                     float amountToDig = math.lerp(_maxBuildRate, _minBuildRate, distToDensity / _buildRadius);
                                     amountToDig = math.clamp(amountToDig, 0, 1);
                                     float densityDelta = buildValue * amountToDig;
-                                    densities.Add(densityDelta);
+                                    densities.Add(densityDelta + density);
                                     Debug.Log($"Density to Increase: {densityDelta}");
                                 });
                                     
