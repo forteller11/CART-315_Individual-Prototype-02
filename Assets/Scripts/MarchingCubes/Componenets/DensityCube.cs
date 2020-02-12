@@ -152,5 +152,28 @@ namespace MarchingCubes
 //            BUL = func.Invoke(BUL);
 //            BUR = func.Invoke(BUR);
         }
+
+        public int EdgeFlagsFromThreshold(float threshold)
+        {
+            //BDR 0
+            //FDR 1
+            //FDL 2
+            //BDL 3
+            //BUR 4
+            //FUR 5
+            //FUL 6
+            //BUL 7
+            
+            int v0 = (BDR > threshold) ? 1 << 0 : 0;
+            int v1 = (FDR > threshold) ? 1 << 1 : 0;
+            int v2 = (FDL > threshold) ? 1 << 2 : 0;
+            int v3 = (BDL > threshold) ? 1 << 3 : 0;
+            int v4 = (BUR > threshold) ? 1 << 4 : 0;
+            int v5 = (FUR > threshold) ? 1 << 5 : 0;
+            int v6 = (FUL > threshold) ? 1 << 6 : 0;
+            int v7 = (BUL > threshold) ? 1 << 7 : 0;
+
+            return v0 + v1 + v2 + v3 + v4 + v5 + v6 + v7;
+        }
     }
 }

@@ -20,6 +20,9 @@
             </e>
             <e p="CreateAndChildGameObject.cs" t="Include" />
             <e p="Extensions.cs" t="Include" />
+            <e p="IMarching.cs" t="Include" />
+            <e p="Marching.cs" t="Include" />
+            <e p="MarchingCubes.cs" t="Include" />
             <e p="SpawnChunks.cs" t="Include" />
             <e p="Systems" t="Include">
               <e p="ChangePointDensity.cs" t="Include" />
