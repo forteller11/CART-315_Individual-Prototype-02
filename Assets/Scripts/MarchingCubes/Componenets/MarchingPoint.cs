@@ -6,7 +6,6 @@ namespace MarchingCubes
 {
     public struct MarchingPoint : IComponentData
     {
-        public float3 ChunkPos;
         public float Density;
     }
 }

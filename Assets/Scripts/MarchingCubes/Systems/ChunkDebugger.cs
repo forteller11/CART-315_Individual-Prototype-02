@@ -22,7 +22,7 @@ namespace MarchingCubes.Systems
                 return;
 
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            Entities.ForEach((Entity entity) =>
+            Entities.WithAll<ChunkIndex>().WithNone<MarchingPoint>().ForEach((Entity entity) =>
             {
                 DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetSharedComponentData<ChunkIndex>(entity));
                 //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
@@ -87,7 +87,7 @@ namespace MarchingCubes.Systems
 
         void DebugDrawPoint(Translation pos, MarchingPoint point, ChunkIndex index)
         {
-            var value = point.Density;
+            var value = point.Density+.1f;
             var p = pos.Value;
 
             var r = 1/((index.Index.x % modR)+1);
@@ -95,7 +95,8 @@ namespace MarchingCubes.Systems
             var b = 1/((index.Index.z % modB)+1);
             var col = new Color(r, g, b,value);
             
-            var len = 0.07f;
+            float len = (1f * point.Density)+ 0.01f;
+            
             float3 offset = new float3(
                 _random.NextFloat(-len,len),
                 _random.NextFloat(-len,len),
