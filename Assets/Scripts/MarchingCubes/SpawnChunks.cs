@@ -25,6 +25,10 @@ namespace MarchingCubes
         public float BaseDensityAlpha = .1f;
         [Range(0,.5f)]
         public float BaseDensityVectorLength = 0.05f;
+
+        [Header("Marching Cubes")] 
+        [Range(0,1)]
+        public float MarchingCubesThreshold = 0.5f;
         
 
         BlobAssetStore _blobAssetStore;
@@ -148,6 +152,7 @@ namespace MarchingCubes
             ChunkDebugger.DebugDraw = DebugDraw;
             ChunkDebugger.BaseAlpha = BaseDensityAlpha;
             ChunkDebugger.BaseSize = BaseDensityVectorLength;
+            Systems.MarchingCubes.MarchingCubesThreshold = MarchingCubesThreshold;
         }
         
         

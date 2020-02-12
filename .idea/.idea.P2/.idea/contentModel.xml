@@ -26,6 +26,7 @@
               <e p="ChangePointDensitySyncronous.cs" t="Include" />
               <e p="ChunkDebugger.cs" t="Include" />
               <e p="ChunkRaycast.cs" t="Include" />
+              <e p="MarchingCubes.cs" t="Include" />
               <e p="PlayerMovement.cs" t="Include" />
             </e>
           </e>

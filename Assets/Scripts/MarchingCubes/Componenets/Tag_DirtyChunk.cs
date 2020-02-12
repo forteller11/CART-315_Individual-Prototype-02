@@ -2,6 +2,7 @@
 
 namespace MarchingCubes
 {
+    [GenerateAuthoringComponent]
     public struct Tag_DirtyChunk : IComponentData
     {
         
