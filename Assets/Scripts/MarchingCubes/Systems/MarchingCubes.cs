@@ -44,34 +44,35 @@ namespace MarchingCubes.Systems
                 
                 for (int di = 0; di < densities.Length; di++)
                 {
+                    var pointIndex = di * 8;
                     densities[di].ForEach(new Translation {Value=0}, currentChunkData, (density, pos) =>
                     {
-                        verts.Add(pos);
+                        verts.Add(pos/2);
                     });
                     //front face
-                    tris.AddRange( new int[]{di+0, di+2, di+3}); // |_
-                    tris.AddRange( new int[]{di+1, di+3, di+2}); // _|
+                    tris.AddRange( new int[]{pointIndex+0, pointIndex+2, pointIndex+3}); // |_
+                    tris.AddRange( new int[]{pointIndex+1, pointIndex+0, pointIndex+3}); // _|
                     
-                    //backface
-                    tris.AddRange( new int[]{di+7, di+6, di+4}); // _|
-                    tris.AddRange( new int[]{di+6, di+7, di+5}); // |_
+                    tris.AddRange( new int[]{pointIndex+7, pointIndex+6, pointIndex+4}); // _|
+                    tris.AddRange( new int[]{pointIndex+7, pointIndex+4, pointIndex+5}); // |_
                     
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
-                    tris.AddRange( new int[]{di+0, di+1, di+2});
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
                 }
                 
                 currentRenderMesh.mesh.SetVertices(verts);
                 currentRenderMesh.mesh.SetIndices(tris, MeshTopology.Triangles, 0); //ei instead of 0
                 currentRenderMesh.mesh.RecalculateBounds();
+                currentRenderMesh.mesh.RecalculateNormals();
                 //ecs.SetSharedComponentData(dirtyChunks[ei], currentRenderMesh);
                 Debug.Log("Draw mesh!");
                 //Graphics.DrawMesh(currentRenderMesh.mesh, Matrix4x4.identity, currentRenderMesh.material, 0);
