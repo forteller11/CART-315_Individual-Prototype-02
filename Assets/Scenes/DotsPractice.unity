@@ -433,7 +433,17 @@ PrefabInstance:
     - target: {fileID: 8472469735800098404, guid: 99a7cb076f81e234abf06dfd303956a3,
         type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098404, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: m_Material.m_BelongsTo.m_Value.Array.data[0]
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098404, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: m_Material.m_CollidesWith.m_Value.Array.data[0]
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8472469735800098405, guid: 99a7cb076f81e234abf06dfd303956a3,
         type: 3}

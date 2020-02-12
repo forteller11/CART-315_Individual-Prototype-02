@@ -14,6 +14,12 @@ namespace MarchingCubes.Systems
 {
     public class ChangePointDensitySynchronous : ComponentSystem
     {
+        private CollisionFilter _chunkFilter = new CollisionFilter
+        {
+            BelongsTo = 0xffffffff,
+            CollidesWith = 1 << 0,
+            GroupIndex = 0,
+        };
         protected override void OnStartRunning()
         {
             base.OnStartRunning();
@@ -22,6 +28,7 @@ namespace MarchingCubes.Systems
 
         protected override void OnUpdate()
         {
+          
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
@@ -36,7 +43,7 @@ namespace MarchingCubes.Systems
                 {
                     Start = (float3) camPos,
                     End = (float3) camDir * 100,
-                    Filter = CollisionFilter.Default
+                    Filter = _chunkFilter
                 };
 //                
                 RaycastHit hitChunk;
@@ -47,7 +54,7 @@ namespace MarchingCubes.Systems
                     {
                         Position = hitChunk.Position,
                         MaxDistance = 4f,
-                        Filter = CollisionFilter.Default
+                        Filter = _chunkFilter
                     };
                     var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
                     if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
