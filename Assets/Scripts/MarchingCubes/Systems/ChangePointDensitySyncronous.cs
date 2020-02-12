@@ -8,6 +8,7 @@ using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
 using Collider = Unity.Physics.Collider;
+using Math = System.Math;
 using RaycastHit = Unity.Physics.RaycastHit;
 
 namespace MarchingCubes.Systems
@@ -21,7 +22,7 @@ namespace MarchingCubes.Systems
             GroupIndex = 0,
         };
 
-        private float _buildRadius = 4f;
+        private float _buildRadius = 2f;
         private float _maxBuildRate = 0.1f;
         private float _minBuildRate = 0;
         private PlayerControls _input;
@@ -55,11 +56,11 @@ namespace MarchingCubes.Systems
                 ComponentType.ReadOnly<ChunkData>(),
                 ComponentType.ReadOnly<Translation>());
             
-            float buildValue = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
+            float buildInput = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
             
             Entities.ForEach((ref Translation translation, ref Input input) =>
             {
-                Debug.Log("Found an input entity");
+                //Debug.Log("Found an input entity");
                 
                 RaycastInput raycastInput = new RaycastInput
                 {
@@ -82,19 +83,26 @@ namespace MarchingCubes.Systems
                     var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
                     if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
                     {
-                        Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
+                        //Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
                         for (int i = 0; i < distanceChunkHits.Length; i++)
                         {
+                            
                             Debug.DrawLine(distanceChunkHits[i].Position,
                                 distanceChunkHits[i].Position + distanceChunkHits[i].SurfaceNormal,
                                 new Color(1f, 0.55f, 0.25f));
+                            
+                            bool chunkIsDirty = false;
+                            
                             var rbIndex = distanceChunkHits[i].RigidBodyIndex;
                             Entity hitChunkEntity = buildPhysicsWorld.PhysicsWorld.Bodies[rbIndex].Entity;
-
+                            
+                            if (!ecs.HasComponent<ChunkData>(hitChunkEntity)) //didnt hit chunk index
+                                return;
+                            
                             var chunkIndexOfHit = ecs.GetSharedComponentData<ChunkData>(hitChunkEntity);
                             
                             queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
-                            Debug.Log($"chunk index {chunkIndexOfHit}");
+                            //Debug.Log($"chunk index {chunkIndexOfHit}");
                             
                             var densityCubes = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
                             var pointPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
@@ -106,24 +114,32 @@ namespace MarchingCubes.Systems
                                 var distToCubeCenter = math.distance(hitChunk.Position, pointPositions[j].Value); //
                                 if (distToCubeCenter > _buildRadius + chunkIndexOfHit.DensityCubeWidth)
                                     continue;
-
+                                
+                                if (Math.Abs(buildInput) > 0.08)
+                                    chunkIsDirty = true;
+                                    
                                 NativeList<float> densities = new NativeList<float>(8, Allocator.Temp);
                                 densityCubes[j].ForEach(pointPositions[j], chunkIndexOfHit, (density, pos) =>
                                 {
                                     var distToDensity = math.distance(hitChunk.Position, pos);
                                     float amountToDig = math.lerp(_maxBuildRate, _minBuildRate, distToDensity / _buildRadius);
-                                    amountToDig = math.clamp(amountToDig, 0, 1);
-                                    float densityDelta = buildValue * amountToDig;
+               
+                                    float densityDelta = buildInput * amountToDig;
                                     densities.Add(densityDelta + density);
-                                    Debug.Log($"Density to Increase: {densityDelta}");
+                                    //Debug.Log($"Density to Increase: {densityDelta}");
                                 });
                                     
                                 ecs.SetComponentData(pointEntities[j], new DensityCube(densities));
                                 densities.Dispose();
                                 
                                 var pPos = ecs.GetComponentData<Translation>(pointEntities[j]).Value;
-                                Debug.DrawLine(pPos, pPos + new float3(.04f,.04f,.04f), new Color(0.67f, 1f, 0.73f,0.3f));
+                                Debug.DrawLine(pPos, pPos + new float3(.07f,.07f,.07f), new Color(0.67f, 1f, 0.73f,0.5f));
                             }
+                            
+                            //if dirty and doesnt already have chunk
+                            if (chunkIsDirty && !ecs.HasComponent<Tag_DirtyChunk>(hitChunkEntity))
+                                ecs.AddComponent<Tag_DirtyChunk>(hitChunkEntity);
+
 
                             pointEntities.Dispose();
                             densityCubes.Dispose();

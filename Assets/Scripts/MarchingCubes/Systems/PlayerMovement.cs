@@ -32,7 +32,6 @@ namespace MarchingCubes
             float3 linearVelocityAbsolute = new float3(inputLinear.x, 0, inputLinear.y);
             var t = Time.DeltaTime;
             
-            Debug.Log($"--------------------");
             //Debug.Log($"linear: {inputLinear}");
             //Debug.Log($"angular: {inputAngular}");
             Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation, ref Translation translation) =>
