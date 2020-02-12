@@ -19,13 +19,13 @@ namespace MarchingCubes
         public int PointsInRow = 3;
         public static float CHUNK_SIZE = 4;
         public int3 ChunksToSpawn = new int3(2,2,2);
-
+        [Header("Debugging")]
         public bool DebugDraw = false;
-
-        public ConvertToEntity ChunkPrefab;
+        [Range(0,.5f)]
+        public float BaseDensityAlpha = .1f;
+        [Range(0,.5f)]
+        public float BaseDensityVectorLength = 0.05f;
         
-        public Mesh Mesh;
-        public Material Material;
 
         BlobAssetStore _blobAssetStore;
         void Start()
@@ -141,6 +141,8 @@ namespace MarchingCubes
         void Update()
         {
             ChunkDebugger.DebugDraw = DebugDraw;
+            ChunkDebugger.BaseAlpha = BaseDensityAlpha;
+            ChunkDebugger.BaseSize = BaseDensityVectorLength;
         }
         
         

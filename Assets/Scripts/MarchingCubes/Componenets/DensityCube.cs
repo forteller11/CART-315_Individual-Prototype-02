@@ -1,13 +1,31 @@
 ﻿using System;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
+using UnityEngine;
 
 namespace MarchingCubes
 {
     public struct DensityCube : IComponentData
     {
+
+        public DensityCube(NativeList<float> densities)
+        {
+            if (densities.Length != 8)
+                Debug.LogError("make sure native list has 8 elements!");
+            
+            _FDL = densities[0]; 
+            _FDR = densities[1]; 
+            _FUL = densities[2]; 
+            _FUR = densities[3]; 
+                
+            _BDL = densities[4]; 
+            _BDR = densities[5]; 
+            _BUL = densities[6]; 
+            _BUR = densities[7]; 
+        }
         //(forward/back, up/down, left/right)
         //values: 0-1
         
@@ -110,7 +128,7 @@ namespace MarchingCubes
         public void ForEach(Translation centerOfCube, ChunkIndex chunkIndex, Action<float, float3> pointBasedAction)
         {
             float3 c = centerOfCube.Value;
-            float w = chunkIndex.ChunkWidth/chunkIndex.PointsInARow-1;
+            float w = chunkIndex.DistBetweenDensityCubes;
             
             
             //calculate pos of each point

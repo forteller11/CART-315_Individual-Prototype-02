@@ -96,26 +96,37 @@ namespace MarchingCubes.Systems
                             queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
                             Debug.Log($"chunk index {chunkIndexOfHit}");
                             
-                            var pointValues = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
+                            var densityCubes = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
                             var pointPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
                             var pointEntities = queryPoints.ToEntityArray(Allocator.TempJob);
                             
                             
                             for (int j = 0; j < pointEntities.Length; j++)
                             {
-                                var distToPoint = math.distance(hitChunk.Position, pointPositions[j].Value);
-                                if (distToPoint > _buildRadius)
+                                var distToCubeCenter = math.distance(hitChunk.Position, pointPositions[j].Value); //
+                                if (distToCubeCenter > _buildRadius + chunkIndexOfHit.DistBetweenDensityCubes)
                                     continue;
-                                float densityIncrease = buildValue * math.lerp(_maxBuildRate, _minBuildRate, distToPoint / _buildRadius);
-                                
-                                //ecs.SetComponentData(pointEntities[j], new DensityCube { DensityBL = pointValues[j].DensityBL + densityIncrease });
+
+                                NativeList<float> densities = new NativeList<float>(8, Allocator.Temp);
+                                densityCubes[j].ForEach(pointPositions[j], chunkIndexOfHit, (density, pos) =>
+                                {
+                                    var distToDensity = math.distance(hitChunk.Position, pos);
+                                    float amountToDig = math.lerp(_maxBuildRate, _minBuildRate, distToDensity / _buildRadius);
+                                    amountToDig = math.clamp(amountToDig, 0, 1);
+                                    float densityDelta = buildValue * amountToDig;
+                                    densities.Add(densityDelta);
+                                    Debug.Log($"Density to Increase: {densityDelta}");
+                                });
+                                    
+                                ecs.SetComponentData(pointEntities[j], new DensityCube(densities));
+                                densities.Dispose();
                                 
                                 var pPos = ecs.GetComponentData<Translation>(pointEntities[j]).Value;
                                 Debug.DrawLine(pPos, pPos + new float3(.04f,.04f,.04f), new Color(0.67f, 1f, 0.73f,0.3f));
                             }
 
                             pointEntities.Dispose();
-                            pointValues.Dispose();
+                            densityCubes.Dispose();
                             pointPositions.Dispose();
 
                         }

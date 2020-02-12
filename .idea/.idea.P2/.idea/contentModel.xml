@@ -31,7 +31,6 @@
           <e p="PlayerMovement.cs" t="Include" />
           <e p="PlayerMovementMono.cs" t="Include" />
           <e p="SpawnEntities.cs" t="Include" />
-          <e p="SSpawn.cs" t="Include" />
         </e>
       </e>
       <e p="obj" t="ExcludeRecursive" />

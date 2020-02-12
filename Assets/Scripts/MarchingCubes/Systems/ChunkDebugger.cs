@@ -13,6 +13,8 @@ namespace MarchingCubes.Systems
     public class ChunkDebugger : ComponentSystem
     {
         public static bool DebugDraw = false;
+        public static float BaseAlpha = 0.1f;
+        public static float BaseSize = 0.05f;
         private Random _random = new Random(10);
         private float modR = 2;
         private float modG = 3;
@@ -40,9 +42,9 @@ namespace MarchingCubes.Systems
                     var r = 1/((chunkIndex.Index.x % modR)+1);
                     var g = 1/((chunkIndex.Index.y % modG)+1);
                     var b = 1/((chunkIndex.Index.z % modB)+1);
-                    var col = new Color(r, g, b,density + 0.1f);
+                    var col = new Color(r, g, b,density + BaseAlpha);
             
-                    float len = (0.2f * density) + 0.05f;
+                    float len = (0.2f * density) + BaseSize;
             
                     float3 offset = new float3(
                         _random.NextFloat(-len,len),

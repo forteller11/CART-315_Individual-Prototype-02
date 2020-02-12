@@ -8,5 +8,10 @@ namespace MarchingCubes
         public int3 Index;
         public float ChunkWidth;
         public float PointsInARow;
+
+        public float DistBetweenDensityCubes
+        {
+            get => ChunkWidth / (PointsInARow + 1);
+        }
     }
 }
