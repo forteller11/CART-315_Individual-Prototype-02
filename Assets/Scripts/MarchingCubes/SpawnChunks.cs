@@ -37,7 +37,7 @@ namespace MarchingCubes
             var conversionSettings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
             Entity chunkEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(ChunkGameObjectPrefab, conversionSettings);
             
-            ecsManager.AddComponent<ChunkIndex>(chunkEntity);
+            ecsManager.AddComponent<ChunkData>(chunkEntity);
  
             ecsManager.AddComponent<Scale>(chunkEntity);
 
@@ -54,16 +54,15 @@ namespace MarchingCubes
             var pointArchetype = ecsManager.CreateArchetype(
                 typeof(DensityCube),
                 typeof(Translation),
-                typeof(ChunkIndex)
+                typeof(ChunkData)
             );
             NativeArray<Entity> chunkEntities = new NativeArray<Entity>(ChunksToSpawn.Volume(), Allocator.Temp);
             for (int i = 0; i < chunkEntities.Length; i++)
                 chunkEntities[i] = ecsManager.Instantiate(chunkEntity);
             
-            NativeArray<ChunkSpawnData> chunkSpawnDatas = new NativeArray<ChunkSpawnData>(ChunksToSpawn.Volume(), Allocator.Temp);
+            NativeArray<ChunkCubeSpawnData> chunkSpawnDatas = new NativeArray<ChunkCubeSpawnData>(ChunksToSpawn.Volume(), Allocator.Temp);
             
             var halfOfAChunk = (new float3(1,1,1)*CHUNK_SIZE)/2f;
-            float toIncrement = (float) CHUNK_SIZE / (PointsInRow-1);
 
             chunkEntities.IndexAsIf3D(ChunksToSpawn, (chunk, indexSpatial, indexArr) =>
             {
@@ -72,18 +71,21 @@ namespace MarchingCubes
                 var chunkPos = new float3(indexSpatial.x, indexSpatial.y, indexSpatial.z) * CHUNK_SIZE;
                 var chunkIndex = GetChunkIndex(chunkPos, CHUNK_SIZE);
                 
-                chunkSpawnDatas[indexArr] = new ChunkSpawnData(chunkPos, chunkIndex);
                 
                 ecsManager.SetComponentData(chunk, new Scale { Value = CHUNK_SIZE });
 
                 ecsManager.SetComponentData(chunk, new Translation { Value = chunkPos });
                 
-                ecsManager.SetSharedComponentData(chunk, new ChunkIndex
+                var chunkData = new ChunkData
                 {
                     Index = chunkIndex,
                     ChunkWidth = CHUNK_SIZE,
                     PointsInARow = PointsInRow
-                });
+                };
+                
+                ecsManager.SetSharedComponentData(chunk, chunkData);
+                
+                chunkSpawnDatas[indexArr] = new ChunkCubeSpawnData(chunkPos, chunkData);
                 
 
 
@@ -95,16 +97,18 @@ namespace MarchingCubes
             pointEntities.IndexAsIf4D(pointsToSpawn,(point, indexSpatial, indexArr) =>
             {
                 ecsManager.SetName(point, $"Point [{indexSpatial.y}, {indexSpatial.z}, {indexSpatial.w}] Chunk {indexSpatial.x}");
-                var posWithinChunk = (new float3(indexSpatial.y, indexSpatial.z, indexSpatial.w) * toIncrement) - halfOfAChunk;
+                var cubeHalfWidth = chunkSpawnDatas[indexSpatial.x].ChunkData.DensityCubeWidth/2;
+                
+                var posWithinChunk = (new float3(indexSpatial.y, indexSpatial.z, indexSpatial.w) * cubeHalfWidth) + new float3(cubeHalfWidth,cubeHalfWidth,cubeHalfWidth);
                 var worldPos = posWithinChunk + chunkSpawnDatas[indexSpatial.x].Position;
                 
                 ecsManager.SetComponentData(point, new Translation { Value = worldPos });
                     
                 ecsManager.SetComponentData(point, new DensityCube ());
 
-                ecsManager.SetSharedComponentData(point, new ChunkIndex
+                ecsManager.SetSharedComponentData(point, new ChunkData
                 {
-                    Index = chunkSpawnDatas[indexSpatial.x].Index,
+                    Index = chunkSpawnDatas[indexSpatial.x].ChunkData.Index,
                     ChunkWidth = CHUNK_SIZE,
                     PointsInARow = PointsInRow
                 });
@@ -121,15 +125,15 @@ namespace MarchingCubes
             return  (int3) (position / chunkSize);
         }
 
-        private struct ChunkSpawnData
+        private struct ChunkCubeSpawnData
         {
             public float3 Position;
-            public int3 Index;
+            public ChunkData ChunkData;
 
-            public ChunkSpawnData(float3 position, int3 index)
+            public ChunkCubeSpawnData(float3 position, ChunkData chunkData)
             {
                 Position = position;
-                Index = index;
+                ChunkData = chunkData;
             }
         }
 

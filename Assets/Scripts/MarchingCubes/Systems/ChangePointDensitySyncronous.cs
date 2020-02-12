@@ -52,7 +52,7 @@ namespace MarchingCubes.Systems
             
             EntityQuery queryPoints = GetEntityQuery(
                 Unity.Entities.ComponentType.ReadWrite<DensityCube>(),
-                ComponentType.ReadOnly<ChunkIndex>(),
+                ComponentType.ReadOnly<ChunkData>(),
                 ComponentType.ReadOnly<Translation>());
             
             float buildValue = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
@@ -91,7 +91,7 @@ namespace MarchingCubes.Systems
                             var rbIndex = distanceChunkHits[i].RigidBodyIndex;
                             Entity hitChunkEntity = buildPhysicsWorld.PhysicsWorld.Bodies[rbIndex].Entity;
 
-                            var chunkIndexOfHit = ecs.GetSharedComponentData<ChunkIndex>(hitChunkEntity);
+                            var chunkIndexOfHit = ecs.GetSharedComponentData<ChunkData>(hitChunkEntity);
                             
                             queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
                             Debug.Log($"chunk index {chunkIndexOfHit}");
@@ -104,7 +104,7 @@ namespace MarchingCubes.Systems
                             for (int j = 0; j < pointEntities.Length; j++)
                             {
                                 var distToCubeCenter = math.distance(hitChunk.Position, pointPositions[j].Value); //
-                                if (distToCubeCenter > _buildRadius + chunkIndexOfHit.DistBetweenDensityCubes)
+                                if (distToCubeCenter > _buildRadius + chunkIndexOfHit.DensityCubeWidth)
                                     continue;
 
                                 NativeList<float> densities = new NativeList<float>(8, Allocator.Temp);

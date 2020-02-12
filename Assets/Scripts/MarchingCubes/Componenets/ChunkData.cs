@@ -3,15 +3,17 @@ using Unity.Mathematics;
 
 namespace MarchingCubes
 {
-    public struct ChunkIndex : ISharedComponentData
+    public struct ChunkData : ISharedComponentData
     {
         public int3 Index;
         public float ChunkWidth;
         public float PointsInARow;
 
-        public float DistBetweenDensityCubes
+        public float DensityCubeWidth
         {
             get => ChunkWidth / (PointsInARow + 1);
         }
+        
+        
     }
 }

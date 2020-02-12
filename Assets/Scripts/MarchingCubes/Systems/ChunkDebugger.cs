@@ -25,15 +25,15 @@ namespace MarchingCubes.Systems
                 return;
 
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            Entities.WithAll<ChunkIndex>().WithNone<DensityCube>().ForEach((Entity entity) =>
+            Entities.WithAll<ChunkData>().WithNone<DensityCube>().ForEach((Entity entity) =>
             {
-                DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetSharedComponentData<ChunkIndex>(entity));
+                DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetSharedComponentData<ChunkData>(entity));
                 //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
             });
             
             Entities.WithAll<DensityCube, Translation>().ForEach((Entity entity) =>
             {
-                var chunkIndex = ecs.GetSharedComponentData<ChunkIndex>(entity);
+                var chunkIndex = ecs.GetSharedComponentData<ChunkData>(entity);
                 var densityCube = ecs.GetComponentData<DensityCube>(entity);
                 var translation = ecs.GetComponentData<Translation>(entity);
                 
@@ -59,7 +59,7 @@ namespace MarchingCubes.Systems
         }
 
 
-        void DebugDrawChunk(Translation pos, ChunkIndex index)
+        void DebugDrawChunk(Translation pos, ChunkData index)
         {
             _random.state = (uint) index.Index.Volume()+1;
             
