@@ -29,61 +29,77 @@ namespace MarchingCubes.Systems
         protected override void OnUpdate()
         {
           
-            var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
-            var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
-
-            var camPos = Camera.main.gameObject.transform.position;
-            var camDir = Camera.main.gameObject.transform.forward;
-            Entities.ForEach((ref Translation translation, ref Input input) =>
-            {
-                Debug.Log("Found an input entity");
-                
-                RaycastInput raycastInput = new RaycastInput
-                {
-                    Start = (float3) camPos,
-                    End = (float3) camDir * 100,
-                    Filter = _chunkFilter
-                };
+//            var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+//            var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
+//            var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
+//            
+//
+//            var camPos = Camera.main.gameObject.transform.position;
+//            var camDir = Camera.main.gameObject.transform.forward;
+//            
+//            EntityQuery queryPoints = GetEntityQuery(typeof(MarchingPoint), ComponentType.ReadOnly<ChunkIndex>());
+//        
+//            Entities.ForEach((ref Translation translation, ref Input input) =>
+//            {
+//                Debug.Log("Found an input entity");
 //                
-                RaycastHit hitChunk;
-                if (collisionWorld.CastRay(raycastInput, out hitChunk))
-                {
-                    Debug.DrawLine(camPos, hitChunk.Position, new Color(1f, 0.27f, 0.89f));
-                    PointDistanceInput pointDistanceInput = new PointDistanceInput
-                    {
-                        Position = hitChunk.Position,
-                        MaxDistance = 4f,
-                        Filter = _chunkFilter
-                    };
-                    var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
-                    if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
-                    {
-                        
-                        Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
-                        for (int i = 0; i < distanceChunkHits.Length; i++)
-                        {
-                            Debug.DrawLine(distanceChunkHits[i].Position, distanceChunkHits[i].Position + new float3 (0.1f,0.1f,0.1f), new Color(1f, 0.55f, 0.25f));
-                            //get all points in chunk
-                        }
-                  
-                    }
-                    
-                    //find point of contact
-             
-                    
-                    //create sphere collider at point and get all collided chunks
-                    
-                    //get all collided points and increase their value
-                    
-                    //marching cubes algo
-                    distanceChunkHits.Dispose();
-                }
-            });
-
-
-
-
+//                RaycastInput raycastInput = new RaycastInput
+//                {
+//                    Start = (float3) camPos,
+//                    End = (float3) camDir * 100,
+//                    Filter = _chunkFilter
+//                };
+////                
+//                RaycastHit hitChunk;
+//                if (collisionWorld.CastRay(raycastInput, out hitChunk))
+//                {
+//                    Debug.DrawLine(camPos, hitChunk.Position, new Color(1f, 0.27f, 0.89f));
+//                    PointDistanceInput pointDistanceInput = new PointDistanceInput
+//                    {
+//                        Position = hitChunk.Position,
+//                        MaxDistance = 4f,
+//                        Filter = _chunkFilter
+//                    };
+//                    var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
+//                    if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
+//                    {
+//                        Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
+//                        for (int i = 0; i < distanceChunkHits.Length; i++)
+//                        {
+//                            Debug.DrawLine(distanceChunkHits[i].Position,
+//                                distanceChunkHits[i].Position + new float3(0.1f, 0.1f, 0.1f),
+//                                new Color(1f, 0.55f, 0.25f));
+//                            var rbIndex = distanceChunkHits[i].RigidBodyIndex;
+//                            Entity hitChunkEntity = buildPhysicsWorld.PhysicsWorld.Bodies[rbIndex].Entity;
+//
+//                            var chunkIndexOfHit = ecs.GetSharedComponentData<ChunkIndex>(hitChunkEntity);
+//
+//                            queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
+//
+//                            var pointValues = queryPoints.ToComponentDataArray<MarchingPoint>(Allocator.Temp);
+//                            var pointEntities = queryPoints.ToEntityArray(Allocator.Temp);
+//
+//                            for (int j = 0; j < pointValues.Length; j++)
+//                            {
+//                                ecs.SetComponentData(pointEntities[i], new MarchingPoint
+//                                {
+//                                    ChunkPos = pointValues[i].ChunkPos,
+//                                    Density = pointValues[i].Density + 0.005f
+//                                });
+//                            }
+//
+//                            pointEntities.Dispose();
+//                            pointValues.Dispose();
+//                            
+//                        }
+//                    }
+//
+//                    //marching cubes algo
+//                    distanceChunkHits.Dispose();
+//                }
+//            });
         }
-        }
+        
+        
     }
+}
