@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.Physics;
 using Unity.Physics;
+using Unity.Jobs;
 using Unity.Transforms;
 using UnityEngine;
 using Collider = Unity.Physics.Collider;
@@ -60,35 +60,37 @@ namespace MarchingCubes.Systems
                         MaxDistance = 1f,
                         Filter = _chunkFilter
                     };
-                    var distanceChunkHits = new NativeList<DistanceHit>(Allocator.TempJob);
+                    var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
                     if (collisionWorld.CalculateDistance(pointDistanceInput, ref distanceChunkHits))
                     {
                         Debug.Log($"Collided with {distanceChunkHits.Length} chunks!");
                         for (int i = 0; i < distanceChunkHits.Length; i++)
                         {
                             Debug.DrawLine(distanceChunkHits[i].Position,
-                                distanceChunkHits[i].Position + new float3(0.1f, 0.1f, 0.1f),
+                                distanceChunkHits[i].Position + distanceChunkHits[i].SurfaceNormal,
                                 new Color(1f, 0.55f, 0.25f));
                             var rbIndex = distanceChunkHits[i].RigidBodyIndex;
                             Entity hitChunkEntity = buildPhysicsWorld.PhysicsWorld.Bodies[rbIndex].Entity;
 
                             var chunkIndexOfHit = ecs.GetSharedComponentData<ChunkIndex>(hitChunkEntity);
                             
-                            queryPoints.ResetFilter();
                             queryPoints.SetSharedComponentFilter(chunkIndexOfHit);
-
+                            Debug.Log($"chunk index {chunkIndexOfHit}");
+                            
                             var pointValues = queryPoints.ToComponentDataArray<MarchingPoint>(Allocator.TempJob);
+            
                             var pointEntities = queryPoints.ToEntityArray(Allocator.TempJob);
-
-                            for (int j = 0; j < pointValues.Length; j++)
+                            
+                            
+                            for (int j = 0; j < pointEntities.Length; j++)
                             {
-                                //Debug.Log("increase density values");
-                                ecs.SetComponentData(pointEntities[i], new MarchingPoint
+                                
+                                ecs.SetComponentData(pointEntities[j], new MarchingPoint
                                 {
-                                    Density = pointValues[i].Density + 0.01f
+                                    Density = pointValues[j].Density + 0.01f
                                 });
-                                var pPos = ecs.GetComponentData<Translation>(pointEntities[i]).Value;
-                                Debug.DrawLine(pPos, pPos + new float3(.1f,.1f,.1f), new Color(0.67f, 1f, 0.73f));
+                                var pPos = ecs.GetComponentData<Translation>(pointEntities[j]).Value;
+                                Debug.DrawLine(pPos, pPos + new float3(.1f,.1f,.1f), new Color(0.67f, 1f, 0.73f,0.3f));
                             }
 
                             pointEntities.Dispose();
@@ -98,6 +100,7 @@ namespace MarchingCubes.Systems
                     }
 
                     //marching cubes algo
+                    
                     distanceChunkHits.Dispose();
                 }
             });
