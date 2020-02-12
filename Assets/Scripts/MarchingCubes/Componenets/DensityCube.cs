@@ -220,19 +220,19 @@ namespace MarchingCubes
                     
             }
 
-        public Vector3[] GetAllEdgePositions(float3 centerOfCube, float CubeWidth)
+        public Vector3[] GetAllEdgePositions(float3 centerOfCube, float3 centerOfChunk, float CubeWidth)
         {
-            Vector3 c = centerOfCube;
-            float w = CubeWidth/2;
+            Vector3 c = centerOfCube-centerOfChunk; //pos relative to chunk center
+            float w = CubeWidth;
 
-            Vector3 bdr = new Vector3(-w, -w, w); //BDR
+            Vector3 bdr = new Vector3(w, -w, -w); //BDR
             Vector3 fdr = new Vector3(w, -w, w);
-            Vector3 fdl = new Vector3(w,-w,-w);
+            Vector3 fdl = new Vector3(-w,-w,w);
             Vector3 bdl = new Vector3(-w,-w,-w);
 
-            Vector3 bur = new Vector3(-w, w, w);
+            Vector3 bur = new Vector3(w, w, -w);
             Vector3 fur = new Vector3(w,w,w);
-            Vector3 ful = new Vector3(w,w,-w);
+            Vector3 ful = new Vector3(-w,w,-w);
             Vector3 bul = new Vector3(-w, w, -w);
             
             return new Vector3[]
@@ -251,6 +251,42 @@ namespace MarchingCubes
                 c + ((bur + bdr) / 2f)
             };
             
-        } 
+        }
+
+        public int[] GetAllDenseIndices(float threshold, int inc)
+        {
+            NativeList<int> indices = new NativeList<int>(Allocator.Temp);
+
+            if (FDR > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 9 + inc;
+                tri[1] = 1 + inc;
+                tri[2] = 0 + inc;
+                indices.AddRange(tri);
+            }
+            
+            if (FDL > threshold)
+                         {
+                             var tri = new NativeArray<int>(3, Allocator.Temp);
+                             tri[0] = 10 + inc;
+                             tri[1] = 1 + inc;
+                             tri[2] = 2 + inc;
+                             indices.AddRange(tri);
+                         }
+            
+            if (BDL > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 11 + inc;
+                tri[1] = 2 + inc;
+                tri[2] = 3 + inc;
+                indices.AddRange(tri);
+            }
+            
+            int[] arr = indices.ToArray();
+            indices.Dispose();
+            return arr;
+        }
         }
     }

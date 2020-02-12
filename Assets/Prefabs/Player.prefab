@@ -189,11 +189,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Linear:
-    x: 60
-    y: 60
+    x: 90
+    y: 90
   Angular:
-    x: 140
-    y: 140
+    x: 300
+    y: 300
   Build: 0
 --- !u!114 &8472469735800098411
 MonoBehaviour:

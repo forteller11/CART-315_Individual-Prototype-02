@@ -15,8 +15,8 @@ namespace MarchingCubes.Systems
         public static float MarchingCubesThreshold = 0.1f;
         protected override void OnUpdate()
         {
-       
-            var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+	        var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             EntityQuery queryDirtyChunks = GetEntityQuery(
                 Unity.Entities.ComponentType.ReadOnly<RenderMesh>(),
                 ComponentType.ReadOnly<Tag_DirtyChunk>(),
@@ -30,7 +30,8 @@ namespace MarchingCubes.Systems
                 ComponentType.ReadOnly<Translation>());
 
             var dirtyChunks = queryDirtyChunks.ToEntityArray(Allocator.TempJob);
-            Debug.Log($"dirty chunks queried {dirtyChunks.Length}");
+            var dirtyChunkTranslations = queryDirtyChunks.ToComponentDataArray<Translation>(Allocator.TempJob);
+            //Debug.Log($"dirty chunks queried {dirtyChunks.Length}");
             for (int ei = 0; ei < dirtyChunks.Length; ei++)
             {
                 ecs.RemoveComponent<Tag_DirtyChunk>(dirtyChunks[ei]);
@@ -51,23 +52,24 @@ namespace MarchingCubes.Systems
                     densities[di].ForEach(densityPositions[di], currentChunkData, (density, pos) =>
                     {
 	                    var vertFlag = densities[di].VertFlagsFromThreshold(MarchingCubesThreshold);
-	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, currentChunkData.DensityCubeWidth));
+	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, dirtyChunkTranslations[ei].Value, currentChunkData.DensityCubeWidth));
+	                    tris.AddRange(densities[di].GetAllDenseIndices(MarchingCubesThreshold, pointVertIndex));
 	                    //get all vert positions
-	                    var edgeFlag = CubeEdgeFlags[vertFlag]; //THIS ISN'T WORKIGN CORRECTLY
-	                    BitArray bits = new BitArray(BitConverter.GetBytes(edgeFlag));
-	                    for (int ti = 0; ti < 16; ti++)
-	                    {
-		                    var triConnectionList = TriangleConnectionTable[edgeFlag, ti];
-		                    if (triConnectionList != -1)
-		                    {
-			                    tris.Add(triConnectionList);
-		                    }
-		                 
-		                   // Debug.Log(cubePos);
-		                    //Debug.DrawLine(cubePos, cubePos + new float3(0f, .3f, .3f), Color.red);
-	                    }
-	                    
-	                    
+	                    //var edgeFlag = CubeEdgeFlags[vertFlag]; //THIS ISN'T WORKIGN CORRECTLY
+	                    // BitArray bits = new BitArray(BitConverter.GetBytes(edgeFlag));
+	                    // for (int ti = 0; ti < 16; ti++)
+	                    // {
+	                    //  var triConnectionList = TriangleConnectionTable[edgeFlag, ti];
+	                    //  if (triConnectionList != -1)
+	                    //  {
+	                    //   tris.Add(triConnectionList);
+	                    //  }
+	                    //
+	                    // Debug.Log(cubePos);
+	                    //Debug.DrawLine(cubePos, cubePos + new float3(0f, .3f, .3f), Color.red);
+	                    // }
+
+
                     });
                     //front face
 //                    tris.AddRange( new int[]{pointVertIndex+0, pointVertIndex+2, pointVertIndex+3}); // |_
@@ -101,6 +103,7 @@ namespace MarchingCubes.Systems
                 densityPositions.Dispose();
             }
 
+            dirtyChunkTranslations.Dispose();
             dirtyChunks.Dispose();
         }
         

@@ -1,9 +1,9 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="C:\Users\Charly\.Rider2019.2\system\extResources" t="IncludeRecursive" />
-    <e p="C:\Users\Charly\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_P2.1089581319.00" t="ExcludeRecursive" />
-    <e p="D:\MOVE\Homework\Concordia Year 02\Semester 1\CART 315 -- Digital Prototyping\P2" t="IncludeRecursive">
+    <e p="C:\Users\charl\.Rider2019.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\charl\.Rider2019.3\system\resharper-host\local\Transient\ReSharperHost\v193\SolutionCaches\_P2.-2078284194.00" t="ExcludeRecursive" />
+    <e p="C:\Users\charl\Desktop\Homework\CART 315\P2" t="IncludeRecursive">
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="PlayerControls.cs" t="Include" />

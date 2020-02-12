@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -395,15 +395,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
     type: 3}
-  PointsInRow: 3
+  PointsInRow: 1
   ChunksToSpawn:
     x: 1
     y: 1
     z: 1
   DebugDraw: 1
-  BaseDensityAlpha: 0.1
-  BaseDensityVectorLength: 0.05
-  MarchingCubesThreshold: 0.086
+  BaseDensityAlpha: 0.045
+  BaseDensityVectorLength: 0.098
+  MarchingCubesThreshold: 0
   InitialDensity: 0.355
 --- !u!4 &233439848
 Transform:
@@ -450,16 +450,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
-        type: 3}
-      propertyPath: Linear.x
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
-        type: 3}
-      propertyPath: Linear.y
-      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 8472469735800098410, guid: 99a7cb076f81e234abf06dfd303956a3,
         type: 3}
@@ -884,7 +874,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0, g: 0.040356394, b: 0.103773594, a: 0}
+  m_BackGroundColor: {r: 0, g: 0, b: 0, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0

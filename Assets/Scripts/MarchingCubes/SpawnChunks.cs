@@ -78,7 +78,7 @@ namespace MarchingCubes
                 var chunkIndex = GetChunkIndex(chunkPos, CHUNK_SIZE);
                 
                 
-                ecsManager.SetComponentData(chunk, new Scale { Value = CHUNK_SIZE });
+                ecsManager.SetComponentData(chunk, new Scale { Value = 1 });
 
                 ecsManager.SetComponentData(chunk, new Translation { Value = chunkPos });
                 

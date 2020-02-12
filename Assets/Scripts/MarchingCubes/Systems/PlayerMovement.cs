@@ -47,11 +47,11 @@ namespace MarchingCubes
                 float3 rightVectorAbs = new float3(1,0,0);
                 
                 var rotMat1 = new float3x3(rotation.Value);
-                var r1 = Quaternion.AngleAxis(inputAngular.x, math.mul(rotMat1, upVectorAbs));
+                var r1 = Quaternion.AngleAxis(inputAngular.x * input.Angular.x, math.mul(rotMat1, upVectorAbs));
                 rotation.Value = math.mul(rotation.Value, r1);
                 
                 var rotMat2 = new float3x3(rotation.Value);
-                var r2 = Quaternion.AngleAxis(inputAngular.y, math.mul(rotMat2, forwardVectorAbs));
+                var r2 = Quaternion.AngleAxis(inputAngular.y * input.Angular.y, math.mul(rotMat2, forwardVectorAbs));
                 //_forwardCache
                 rotation.Value = math.mul(rotation.Value, r2);
                 

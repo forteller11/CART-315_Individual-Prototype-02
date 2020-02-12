@@ -39,6 +39,7 @@ namespace MarchingCubes.Systems
                 
                 densityCube.ForEach( translation, chunkIndex, (density, pos) =>
                 {
+                    
                     var r = 1/((chunkIndex.Index.x % modR)+1);
                     var g = 1/((chunkIndex.Index.y % modG)+1);
                     var b = 1/((chunkIndex.Index.z % modB)+1);
@@ -50,7 +51,9 @@ namespace MarchingCubes.Systems
                         _random.NextFloat(-len,len),
                         _random.NextFloat(-len,len),
                         _random.NextFloat(-len,len));
+                    
                     Debug.DrawLine(pos,pos + offset, col);
+
                 });
                 
                 //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
