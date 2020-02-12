@@ -24,9 +24,20 @@ namespace MarchingCubes.Systems
         private float _buildRadius = 1f;
         private float _maxBuildRate = 0.05f;
         private float _minBuildRate = 0;
+        private PlayerControls _input;
+        
+        
         protected override void OnStartRunning()
         {
             base.OnStartRunning();
+            _input = new PlayerControls();
+            _input.Enable();
+        }
+        
+        protected override void OnStopRunning()
+        {
+            base.OnStopRunning();
+            _input.Disable();
         }
 
         protected override void OnUpdate()
@@ -44,6 +55,8 @@ namespace MarchingCubes.Systems
                 ComponentType.ReadOnly<ChunkIndex>(),
                 ComponentType.ReadOnly<Translation>());
             
+            float buildValue = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
+            
             Entities.ForEach((ref Translation translation, ref Input input) =>
             {
                 Debug.Log("Found an input entity");
@@ -54,7 +67,7 @@ namespace MarchingCubes.Systems
                     End = (float3) camDir * 100,
                     Filter = _chunkFilter
                 };
-
+                
                 
                 RaycastHit hitChunk;
                 if (collisionWorld.CastRay(raycastInput, out hitChunk))
@@ -93,7 +106,7 @@ namespace MarchingCubes.Systems
                                 var distToPoint = math.distance(hitChunk.Position, pointPositions[j].Value);
                                 if (distToPoint > _buildRadius)
                                     continue;
-                                float densityIncrease = math.lerp(_maxBuildRate, _minBuildRate, distToPoint / _buildRadius);
+                                float densityIncrease = buildValue * math.lerp(_maxBuildRate, _minBuildRate, distToPoint / _buildRadius);
                                 
                                 ecs.SetComponentData(pointEntities[j], new MarchingPoint { Density = pointValues[j].Density + densityIncrease });
                                 

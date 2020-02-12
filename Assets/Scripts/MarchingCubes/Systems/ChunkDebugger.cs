@@ -87,7 +87,7 @@ namespace MarchingCubes.Systems
 
         void DebugDrawPoint(Translation pos, MarchingPoint point, ChunkIndex index)
         {
-            var value = point.Density+.1f;
+            var value = point.Density;
             var p = pos.Value;
 
             var r = 1/((index.Index.x % modR)+1);
@@ -95,7 +95,7 @@ namespace MarchingCubes.Systems
             var b = 1/((index.Index.z % modB)+1);
             var col = new Color(r, g, b,value);
             
-            float len = (1f * point.Density)+ 0.01f;
+            float len = (1f * point.Density);
             
             float3 offset = new float3(
                 _random.NextFloat(-len,len),

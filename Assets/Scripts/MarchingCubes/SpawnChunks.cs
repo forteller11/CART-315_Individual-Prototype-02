@@ -119,7 +119,7 @@ namespace MarchingCubes
                     
                 ecsManager.SetComponentData(point, new MarchingPoint
                 {
-                    Density = 0.1f
+                    Density = 0.0f
                 });
 
                 ecsManager.SetSharedComponentData(point, new ChunkIndex
