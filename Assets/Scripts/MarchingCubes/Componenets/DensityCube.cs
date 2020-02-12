@@ -224,7 +224,9 @@ namespace MarchingCubes
         {
             Vector3 c = centerOfCube-centerOfChunk; //pos relative to chunk center
             float w = CubeWidth;
-
+            
+            //MAKE POSITIONS BASED ON CORNERS
+            Debug.LogWarning("Make density cubes trnslation at fdr, and all positions based on that.... also store point posiitons?");
             Vector3 bdr = new Vector3(w, -w, -w); //BDR
             Vector3 fdr = new Vector3(w, -w, w);
             Vector3 fdl = new Vector3(-w,-w,w);
@@ -265,7 +267,6 @@ namespace MarchingCubes
                 tri[2] = 0 + inc;
                 indices.AddRange(tri);
             }
-            
             if (FDL > threshold)
                          {
                              var tri = new NativeArray<int>(3, Allocator.Temp);
@@ -274,13 +275,53 @@ namespace MarchingCubes
                              tri[2] = 2 + inc;
                              indices.AddRange(tri);
                          }
+            if (FUL > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 5 + inc;
+                tri[1] = 10 + inc;
+                tri[2] = 6 + inc;
+                indices.AddRange(tri);
+            }
+            if (FUR > threshold)
+                         {
+                             var tri = new NativeArray<int>(3, Allocator.Temp);
+                             tri[0] = 5 + inc;
+                             tri[1] = 4 + inc;
+                             tri[2] = 9 + inc;
+                             indices.AddRange(tri);
+                         }
             
+            if (BDR > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 8 + inc;
+                tri[1] = 3 + inc;
+                tri[2] = 0 + inc;
+                indices.AddRange(tri);
+            }
             if (BDL > threshold)
             {
                 var tri = new NativeArray<int>(3, Allocator.Temp);
                 tri[0] = 11 + inc;
                 tri[1] = 2 + inc;
                 tri[2] = 3 + inc;
+                indices.AddRange(tri);
+            }
+            if (BUL > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 6 + inc;
+                tri[1] = 11 + inc;
+                tri[2] = 7 + inc;
+                indices.AddRange(tri);
+            }
+            if (BUL > threshold)
+            {
+                var tri = new NativeArray<int>(3, Allocator.Temp);
+                tri[0] = 6 + inc;
+                tri[1] = 11 + inc;
+                tri[2] = 7 + inc;
                 indices.AddRange(tri);
             }
             
