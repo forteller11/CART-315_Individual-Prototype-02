@@ -11,7 +11,7 @@ namespace MarchingCubes
 
         public float DensityCubeWidth
         {
-            get => ChunkWidth / (PointsInARow + 1);
+            get => ChunkWidth / (PointsInARow);
         }
         
         

@@ -128,7 +128,7 @@ namespace MarchingCubes
         public void ForEach(Translation centerOfCube, ChunkData chunkIndex, Action<float, float3> pointBasedAction)
         {
             float3 c = centerOfCube.Value;
-            float w = chunkIndex.DensityCubeWidth;
+            float w = chunkIndex.DensityCubeWidth/2;
             
             
             //calculate pos of each point

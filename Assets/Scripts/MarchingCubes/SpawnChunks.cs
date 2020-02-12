@@ -97,9 +97,10 @@ namespace MarchingCubes
             pointEntities.IndexAsIf4D(pointsToSpawn,(point, indexSpatial, indexArr) =>
             {
                 ecsManager.SetName(point, $"Point [{indexSpatial.y}, {indexSpatial.z}, {indexSpatial.w}] Chunk {indexSpatial.x}");
-                var cubeHalfWidth = chunkSpawnDatas[indexSpatial.x].ChunkData.DensityCubeWidth/2;
-                
-                var posWithinChunk = (new float3(indexSpatial.y, indexSpatial.z, indexSpatial.w) * cubeHalfWidth) + new float3(cubeHalfWidth,cubeHalfWidth,cubeHalfWidth);
+                var cubeWidth = chunkSpawnDatas[indexSpatial.x].ChunkData.DensityCubeWidth;
+                var chunkWidth = chunkSpawnDatas[indexSpatial.x].ChunkData.ChunkWidth;
+                var posWithinChunk = (new float3(indexSpatial.y, indexSpatial.z, indexSpatial.w) * cubeWidth) + cubeWidth/2 ;
+                posWithinChunk -= new float3(chunkWidth,chunkWidth,chunkWidth)/2;
                 var worldPos = posWithinChunk + chunkSpawnDatas[indexSpatial.x].Position;
                 
                 ecsManager.SetComponentData(point, new Translation { Value = worldPos });
