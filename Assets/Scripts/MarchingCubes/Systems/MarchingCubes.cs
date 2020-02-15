@@ -21,12 +21,12 @@ namespace MarchingCubes.Systems
                 Unity.Entities.ComponentType.ReadOnly<RenderMesh>(),
                 ComponentType.ReadOnly<Tag_DirtyChunk>(),
                 ComponentType.ReadOnly<Translation>(),
-                ComponentType.ReadOnly<ChunkData>()
+                ComponentType.ReadOnly<ChunkIndex>()
                 );
             
             EntityQuery queryPoints = GetEntityQuery(
                 Unity.Entities.ComponentType.ReadOnly<DensityCube>(),
-                ComponentType.ReadOnly<ChunkData>(),
+                ComponentType.ReadOnly<ChunkIndex>(),
                 ComponentType.ReadOnly<Translation>());
 
             var dirtyChunks = queryDirtyChunks.ToEntityArray(Allocator.TempJob);
@@ -35,10 +35,10 @@ namespace MarchingCubes.Systems
             for (int ei = 0; ei < dirtyChunks.Length; ei++)
             {
                 ecs.RemoveComponent<Tag_DirtyChunk>(dirtyChunks[ei]);
-                ChunkData currentChunkData = ecs.GetSharedComponentData<ChunkData>(dirtyChunks[ei]);
+                ChunkIndex currentChunkIndex = ecs.GetSharedComponentData<ChunkIndex>(dirtyChunks[ei]);
                 RenderMesh currentRenderMesh = ecs.GetSharedComponentData<RenderMesh>(dirtyChunks[ei]);
                 
-                queryPoints.SetSharedComponentFilter(currentChunkData);
+                queryPoints.SetSharedComponentFilter(currentChunkIndex);
 
                 var densities = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
                 var densityPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
@@ -49,10 +49,10 @@ namespace MarchingCubes.Systems
                 for (int di = 0; di < densities.Length; di++)
                 {
                     var pointVertIndex = di * 12;
-                    densities[di].ForEach(densityPositions[di], currentChunkData, (density, pos) =>
+                    densities[di].ForEach(densityPositions[di], currentChunkIndex, (density, pos) =>
                     {
 	                    var vertFlag = densities[di].VertFlagsFromThreshold(MarchingCubesThreshold);
-	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, dirtyChunkTranslations[ei].Value, currentChunkData.DensityCubeWidth));
+	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, dirtyChunkTranslations[ei].Value, currentChunkIndex.DensityCubeWidth));
 	                    tris.AddRange(densities[di].GetAllDenseIndices(MarchingCubesThreshold, pointVertIndex));
 	                    //get all vert positions
 	                    //var edgeFlag = CubeEdgeFlags[vertFlag]; //THIS ISN'T WORKIGN CORRECTLY

@@ -137,7 +137,7 @@ namespace MarchingCubes
         /// <param name="centerOfCube"></param>
         /// <param name="chunkIndex"></param>
         /// <param name="pointBasedAction">density, position</param>
-        public void ForEach(Translation centerOfCube, ChunkData chunkIndex, Action<float, float3> pointBasedAction)
+        public void ForEach(Translation centerOfCube, ChunkIndex chunkIndex, Action<float, float3> pointBasedAction)
         {
             float3 c = centerOfCube.Value;
             float w = chunkIndex.DensityCubeWidth/2;

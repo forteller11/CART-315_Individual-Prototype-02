@@ -7,13 +7,15 @@ namespace MarchingCubes
 {
     public static class Extensions
     {
+
         /// <summary>
         /// Allows convenient access to 3d array
         /// </summary>
         /// <param name="entities"></param>
         /// <param name="dimensions"> dimensions of 3D array</param>
-        /// <param name="action"> action to perform</param>
-        public static void IndexAsIf3D(this NativeArray<Entity> entities, int3 dimensions, Action<Entity, int3, int> action)
+        /// <param name="action"> where int represents index in flat array, in3 is 3d array, int3 is 3d array</param>
+
+        public static void IndexAsIf3D(this NativeArray<Entity> entities, int3 dimensions, Action<int, int3, int3> action)
         {
             for (int i = 0; i < dimensions.x; i++)
             {
@@ -26,7 +28,10 @@ namespace MarchingCubes
                         int kk = (k);
                         int index = ii + jj + kk;
                         
-                        action.Invoke(entities[index], new int3(i,j,k), index);
+                        action.Invoke(
+                            index, 
+                            new int3(i,j,k), 
+                            new int3(dimensions.z * dimensions.y,dimensions.z,1));
                     }
                 }
             }
