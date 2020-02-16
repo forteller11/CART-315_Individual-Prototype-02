@@ -34,7 +34,7 @@ namespace MarchingCubes.Systems
             for (int ei = 0; ei < dirtyChunksEntities.Length; ei++)
             {
                 ecs.RemoveComponent<Tag_DirtyChunk>(dirtyChunksEntities[ei]);
-
+		
                 RenderMesh currentRenderMesh = ecs.GetSharedComponentData<RenderMesh>(dirtyChunksEntities[ei]);
 
                 var densities = ecs.GetBuffer<ChunkDensities>(dirtyChunksEntities[ei]).Reinterpret<float>();
@@ -48,6 +48,7 @@ namespace MarchingCubes.Systems
 		                Utils.GetChunkPos(indexSpatial, chunkSettings[0].ChunkWidth);
 	                });
                 //MARCHING CUBES ALGO
+                int triHistory = 0;
                 Utils.IndexAsIf3D(new int3(chunkSettings[0].VoxelsInARow), (indexFlat, indexSpatial, indexJumps) =>
                 {
 	                
@@ -59,14 +60,14 @@ namespace MarchingCubes.Systems
 
 
 		                //indices of neighbors
-		                int3 v0 = new int3(0, 0, 0) + indexSpatial;
-		                int3 v1 = new int3(1, 0, 0) + indexSpatial;
-		                int3 v2 = new int3(1, 0, 1) + indexSpatial;
-		                int3 v3 = new int3(0, 0, 1) + indexSpatial;
-		                int3 v4 = new int3(0, 1, 0) + indexSpatial;
-		                int3 v5 = new int3(1, 1, 0) + indexSpatial;
-		                int3 v6 = new int3(1, 1, 1) + indexSpatial;
-		                int3 v7 = new int3(0, 1, 1) + indexSpatial;
+		                int3 v0 = new int3(0, 0, 0);
+		                int3 v1 = new int3(1, 0, 0);
+		                int3 v2 = new int3(1, 0, 1);
+		                int3 v3 = new int3(0, 0, 1);
+		                int3 v4 = new int3(0, 1, 0);
+		                int3 v5 = new int3(1, 1, 0);
+		                int3 v6 = new int3(1, 1, 1);
+		                int3 v7 = new int3(0, 1, 1);
 
 		                int GetFlatIndex(int3 spatial, int3 jumps)
 		                {
@@ -81,7 +82,8 @@ namespace MarchingCubes.Systems
 		                int voxelIndex5 = GetFlatIndex(v5 + indexSpatial, indexJumps);
 		                int voxelIndex6 = GetFlatIndex(v6 + indexSpatial, indexJumps);
 		                int voxelIndex7 = GetFlatIndex(v7 + indexSpatial, indexJumps);
-
+		                
+		
 		                //if points are above threshold, mark them down
 		                ushort vertFlag = 0b_0000_0000;
 		                if (densities[voxelIndex0] > MarchingCubesThreshold) vertFlag |= 0b_0000_0001;
@@ -150,14 +152,14 @@ namespace MarchingCubes.Systems
 
 
 		                //triangulate, connect edges
-		                int triHistory = indexFlat * 12;
+		                triHistory += 12;
 		                for (int triIndex = 0;; triIndex++)
 		                {
 			                int lookUpTableEdgeValue = TriangleConnectionTable[vertFlag, triIndex];
 
 			                if (lookUpTableEdgeValue == -1)
 				                break;
-
+			                
 			                tris.Add(lookUpTableEdgeValue + triHistory);
 		                }
 
