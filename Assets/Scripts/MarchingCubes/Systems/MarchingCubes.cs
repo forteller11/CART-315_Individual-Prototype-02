@@ -148,9 +148,14 @@ namespace MarchingCubes.Systems
 				                break;
 			                trisCurrent.Add(lookUpTableEdgeValue + triHistory);
 		                }
-		                triHistory += 12;
 		                tris.AddRange(trisCurrent.ToArray());
-		          
+//		                for (int i = trisCurrent.Count - 1; i > triHistory; i--)
+//		                {
+//			                tris.Add(trisCurrent[i]);
+//		                }
+		                //not multiple of 3?
+		                triHistory += 12;
+
 
 	                }
                 });
@@ -160,7 +165,7 @@ namespace MarchingCubes.Systems
                 currentRenderMesh.mesh.RecalculateBounds();
                 currentRenderMesh.mesh.RecalculateNormals();
                 //ecs.SetSharedComponentData(dirtyChunksEntities[ei], currentRenderMesh);
-                Debug.Log("Draw mesh!");
+                //Debug.Log("Draw mesh!");
                 //Graphics.DrawMesh(currentRenderMesh.mesh, Matrix4x4.identity, currentRenderMesh.material, 0);
                 
             }

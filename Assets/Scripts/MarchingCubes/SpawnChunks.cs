@@ -32,6 +32,12 @@ namespace MarchingCubes
         public float MarchingCubesThreshold = 0.5f;
         [Range(0,1)]
         public float InitialDensity = 0f;
+        [Range(0,1)]
+        public float MinDig = .01f;
+        [Range(0,1)]
+        public float MaxDig = .1f;
+        [Range(0,8)]
+        public float BuildRadius = 2f;
         
 
         BlobAssetStore _blobAssetStore;
@@ -121,6 +127,9 @@ namespace MarchingCubes
             ChunkDebugger.BaseAlpha = BaseDensityAlpha;
             ChunkDebugger.BaseSize = BaseDensityVectorLength;
             Systems.MarchingCubes.MarchingCubesThreshold = MarchingCubesThreshold;
+            ChangePointDensitySynchronous.BuildRadius = BuildRadius;
+            ChangePointDensitySynchronous.MaxBuildRate = MaxDig;
+            ChangePointDensitySynchronous.MinBuildRate = MinDig;
         }
         
         

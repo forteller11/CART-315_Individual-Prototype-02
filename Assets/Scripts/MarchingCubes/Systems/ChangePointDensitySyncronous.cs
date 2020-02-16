@@ -22,9 +22,9 @@ namespace MarchingCubes.Systems
             GroupIndex = 0,
         };
 
-        private float _buildRadius = 1.5f;
-        private float _maxBuildRate = 0.03f;
-        private float _minBuildRate = .005f;
+        public static float BuildRadius = 1.5f;
+        public static float MaxBuildRate = 0.03f;
+        public static float MinBuildRate = .005f;
         private PlayerControls _input;
         
         
@@ -55,7 +55,9 @@ namespace MarchingCubes.Systems
             var chunkSettings = settingsQuery.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.TempJob);
 
             var camPos = Camera.main.gameObject.transform.position;
-            var camDir = Camera.main.gameObject.transform.forward;
+            //var camDir = Camera.main.gameObject.transform.forward;
+            var viewRay = Camera.main.ScreenPointToRay(new float3(Screen.width / 2, UnityEngine.Input.mousePosition.y,0));
+            var camDir = viewRay.direction;
             
             //hitting a chunk?
             Entities.ForEach((ref Translation translation, ref Input input) =>
@@ -76,7 +78,7 @@ namespace MarchingCubes.Systems
                     PointDistanceInput pointDistanceInput = new PointDistanceInput
                     {
                         Position = hitChunk.Position,
-                        MaxDistance = _buildRadius,
+                        MaxDistance = BuildRadius,
                         Filter = _chunkFilter
                     };
                     var distanceChunkHits = new NativeList<DistanceHit>(Allocator.Temp);
@@ -108,10 +110,10 @@ namespace MarchingCubes.Systems
                                     float3 densityPos = densityPosModel + distanceHitChunkPos;
                                     float distToPoint = math.distance(hitChunk.Position, densityPos);
 
-                                    if (distToPoint < _buildRadius)
+                                    if (distToPoint < BuildRadius)
                                     {
-                                        float amountToChangeDensity = math.lerp(_maxBuildRate, _minBuildRate,
-                                            distToPoint / _buildRadius);
+                                        float amountToChangeDensity = math.lerp(MaxBuildRate, MinBuildRate,
+                                            distToPoint / BuildRadius);
                                         densities[indexFlat] += amountToChangeDensity * buildInput;
                                         densities[indexFlat] = math.clamp(densities[indexFlat], 0f, 1f);
                                         Debug.DrawLine(densityPos, densityPos + new float3(.1f, .1f, .1f),
