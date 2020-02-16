@@ -24,14 +24,16 @@ namespace MarchingCubes.Systems
         {
             if (DebugDraw == false)
                 return;
+            
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+            
             EntityQuery queryPoints = GetEntityQuery(Unity.Entities.ComponentType.ReadOnly<ChunkSettingsSingleton>());
-            var chunkSettings = queryPoints.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.Temp);
+            var chunkSettings = queryPoints.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.TempJob);
         
 
                 Entities.WithAll<ChunkIndex>().ForEach((Entity entity) => //chunk
             {
-                DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetComponentData<ChunkIndex>(entity), chunkSettings[0]);
+                DebugDrawChunk(ecs.GetComponentData<ChunkIndex>(entity), chunkSettings[0]);
             });
             
 //            Entities.WithAll<ChunkIndex, Translation>().ForEach((Entity entity) =>
@@ -65,11 +67,11 @@ namespace MarchingCubes.Systems
         }
 
 
-        void DebugDrawChunk(Translation pos, ChunkIndex index, ChunkSettingsSingleton settings)
+        void DebugDrawChunk(ChunkIndex index, ChunkSettingsSingleton settings)
         {
             _random.state = (uint) index.Value.Volume()+1;
             
-            float3 p = pos.Value;
+            float3 p = settings.ChunkWidth * (float3) index.Value;
             var w = (settings.ChunkWidth/2)*.98f;
             
             //points on chunk cube

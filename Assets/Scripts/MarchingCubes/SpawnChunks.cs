@@ -55,7 +55,8 @@ namespace MarchingCubes
             ///////CHUNK SETTINGS SINGLETON
             var chunkSettingsEntity = ecsManager.CreateEntity(typeof(ChunkSettingsSingleton));
                 ecsManager.SetComponentData(chunkSettingsEntity, new ChunkSettingsSingleton {ChunkWidth = ChunkWidth, VoxelsInARow = VoxelsInARow});
-            
+                ecsManager.SetName(chunkSettingsEntity,"Chunk Settings Singleton");
+                
             //Create a Instantiate array of chunks
             NativeArray<Entity> chunks = new NativeArray<Entity>(ChunksToSpawn.Volume(), Allocator.Temp);
             for (int i = 0; i < chunks.Length; i++)
