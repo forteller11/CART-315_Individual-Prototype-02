@@ -27,8 +27,8 @@ namespace MarchingCubes.Systems
             
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             
-            EntityQuery queryPoints = GetEntityQuery(Unity.Entities.ComponentType.ReadOnly<ChunkSettingsSingleton>());
-            var chunkSettings = queryPoints.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.TempJob);
+            EntityQuery settingsQuery = GetEntityQuery(Unity.Entities.ComponentType.ReadOnly<ChunkSettingsSingleton>());
+            var chunkSettings = settingsQuery.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.TempJob);
         
 
                 Entities.WithAll<ChunkIndex>().ForEach((Entity entity) => //chunk
@@ -42,7 +42,7 @@ namespace MarchingCubes.Systems
                     
                     Utils.IndexAsIf3D(new int3 (chunkSettings[0].VoxelsInARow), (indexFlat, index3D, indexJump) =>
                     {
-                        float3 posRelative = Utils.GetDensityPos(chunkSettings[0].WidthBetweenVoxels, index3D);
+                        float3 posRelative = Utils.GetDensityPosModel(chunkSettings[0].WidthBetweenVoxels, index3D);
                         float3 pos = posRelative + chunkPos;
                             
                         var r = 1/((chunkIndex.Value.x % modR)+1);
@@ -70,7 +70,7 @@ namespace MarchingCubes.Systems
         {
             _random.state = (uint) index.Value.Volume()+1;
             
-            float3 p = settings.ChunkWidth * (float3) index.Value;
+            float3 p = Utils.GetChunkPos(index.Value, settings.ChunkWidth);;
             float w = settings.ChunkWidth * 0.98f;
             
             //points on chunk cube

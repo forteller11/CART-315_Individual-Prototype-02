@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 8422757009665437584}
   - component: {fileID: 6584759304374828676}
   - component: {fileID: 3418596803497001306}
-  - component: {fileID: 6899913201944811548}
   - component: {fileID: 3218321663813655895}
   m_Layer: 0
   m_Name: PhysicsChunkPrefabEntity
@@ -146,9 +145,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_ShapeType: 0
   m_PrimitiveCenter:
-    x: 0
-    y: 0
-    z: 0
+    x: 2
+    y: 2
+    z: 2
   m_PrimitiveSize:
     x: 4
     y: 4
@@ -162,7 +161,7 @@ MonoBehaviour:
   m_Capsule:
     Height: 4
     Radius: 2
-    Axis: 1
+    Axis: 0
   m_Cylinder:
     Height: 4
     Radius: 2
@@ -205,27 +204,6 @@ MonoBehaviour:
       m_Override: 0
       m_Value: 0000000000000000
   m_ConvexRadius_Deprecated: -1
---- !u!114 &6899913201944811548
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3448088159668750072}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb54ea4f67dc17342bcd49954c53502d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DrawColliders: 1
-  DrawColliderEdges: 1
-  DrawColliderAabbs: 1
-  DrawBroadphase: 1
-  DrawMassProperties: 1
-  DrawContacts: 1
-  DrawCollisionEvents: 1
-  DrawTriggerEvents: 1
-  DrawJoints: 1
 --- !u!114 &3218321663813655895
 MonoBehaviour:
   m_ObjectHideFlags: 0

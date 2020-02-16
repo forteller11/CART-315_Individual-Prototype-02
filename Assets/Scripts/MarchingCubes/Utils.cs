@@ -43,9 +43,15 @@ namespace MarchingCubes
         /// <param name="index"> 3d index of point within chunk</param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static float3 GetDensityPos(float widthBetweenVoxels, int3 index)
+        public static float3 GetDensityPosModel(float widthBetweenVoxels, int3 index)
         {
             return (float3) index * widthBetweenVoxels;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 GetChunkPos(int3 index, float chunkWidth)
+        {
+            return (float3) index * chunkWidth;
         }
         
     }
