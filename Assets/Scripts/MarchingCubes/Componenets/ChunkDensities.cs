@@ -4,7 +4,7 @@ using Unity.Entities;
 namespace MarchingCubes
 {
     [GenerateAuthoringComponent]
-    [InternalBufferCapacity(3 * 3 * 3)]
+    [InternalBufferCapacity(8 * 8 * 8)]
     public struct ChunkDensities : IBufferElementData
     {
         public float Density;

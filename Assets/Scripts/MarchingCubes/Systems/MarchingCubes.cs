@@ -12,7 +12,7 @@ namespace MarchingCubes.Systems
 {
     public class MarchingCubes : ComponentSystem
     {
-        public static float MarchingCubesThreshold = 0.1f;
+        public static float MarchingCubesThreshold = 0.5f;
         protected override void OnUpdate()
         {
 
@@ -41,33 +41,128 @@ namespace MarchingCubes.Systems
 
                 List<Vector3> verts = new List<Vector3>(densities.Length * 8);
                 List<int> tris = new List<int>();
-                
-                
+
+                Utils.IndexAsIf3D(new int3(chunkSettings[0].VoxelsInARow),
+	                (indexFlat, indexSpatial, indexJumps) =>
+	                {
+		                Utils.GetChunkPos(indexSpatial, chunkSettings[0].ChunkWidth);
+	                });
                 //MARCHING CUBES ALGO
                 Utils.IndexAsIf3D(new int3(chunkSettings[0].VoxelsInARow), (indexFlat, indexSpatial, indexJumps) =>
                 {
 	                
+	                //if on edge of box, dont perform algo
+	                if (indexSpatial.x < chunkSettings[0].VoxelsInARow - 1 &&
+	                    indexSpatial.y < chunkSettings[0].VoxelsInARow - 1 &&
+	                    indexSpatial.z < chunkSettings[0].VoxelsInARow - 1)
+	                {
+
+
+		                //indices of neighbors
+		                int3 v0 = new int3(0, 0, 0) + indexSpatial;
+		                int3 v1 = new int3(1, 0, 0) + indexSpatial;
+		                int3 v2 = new int3(1, 0, 1) + indexSpatial;
+		                int3 v3 = new int3(0, 0, 1) + indexSpatial;
+		                int3 v4 = new int3(0, 1, 0) + indexSpatial;
+		                int3 v5 = new int3(1, 1, 0) + indexSpatial;
+		                int3 v6 = new int3(1, 1, 1) + indexSpatial;
+		                int3 v7 = new int3(0, 1, 1) + indexSpatial;
+
+		                int GetFlatIndex(int3 spatial, int3 jumps)
+		                {
+			                return (jumps.x * spatial.x) + (jumps.y * spatial.y) + (jumps.z * spatial.z);
+		                }
+
+		                int voxelIndex0 = GetFlatIndex(v0 + indexSpatial, indexJumps);
+		                int voxelIndex1 = GetFlatIndex(v1 + indexSpatial, indexJumps);
+		                int voxelIndex2 = GetFlatIndex(v2 + indexSpatial, indexJumps);
+		                int voxelIndex3 = GetFlatIndex(v3 + indexSpatial, indexJumps);
+		                int voxelIndex4 = GetFlatIndex(v4 + indexSpatial, indexJumps);
+		                int voxelIndex5 = GetFlatIndex(v5 + indexSpatial, indexJumps);
+		                int voxelIndex6 = GetFlatIndex(v6 + indexSpatial, indexJumps);
+		                int voxelIndex7 = GetFlatIndex(v7 + indexSpatial, indexJumps);
+
+		                //if points are above threshold, mark them down
+		                ushort vertFlag = 0b_0000_0000;
+		                if (densities[voxelIndex0] > MarchingCubesThreshold) vertFlag |= 0b_0000_0001;
+		                if (densities[voxelIndex1] > MarchingCubesThreshold) vertFlag |= 0b_0000_0010;
+		                if (densities[voxelIndex2] > MarchingCubesThreshold) vertFlag |= 0b_0000_0100;
+		                if (densities[voxelIndex3] > MarchingCubesThreshold) vertFlag |= 0b_0000_1000;
+		                if (densities[voxelIndex4] > MarchingCubesThreshold) vertFlag |= 0b_0001_0000;
+		                if (densities[voxelIndex5] > MarchingCubesThreshold) vertFlag |= 0b_0010_0000;
+		                if (densities[voxelIndex6] > MarchingCubesThreshold) vertFlag |= 0b_0100_0000;
+		                if (densities[voxelIndex7] > MarchingCubesThreshold) vertFlag |= 0b_1000_0000;
+
+		                //	                if (vertIndices == 0) //if just air, dont bother polygonizing?
+		                //		                return;
+		                int edgeFlags = CubeEdgeFlags[vertFlag];
+
+		                float3 LerpVoxelPosition(float3 voxel1, float3 voxel2, float density1, float density2)
+		                {
+			                float totalDensity = density1 + density2;
+			                return math.lerp(voxel1, voxel2, density2 / totalDensity);
+		                }
+
+		                //CALCULATE VERT POSITIONS
+		                float3 voxelPos0 = Utils.GetChunkPos(voxelIndex0, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos1 = Utils.GetChunkPos(voxelIndex1, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos2 = Utils.GetChunkPos(voxelIndex2, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos3 = Utils.GetChunkPos(voxelIndex3, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos4 = Utils.GetChunkPos(voxelIndex4, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos5 = Utils.GetChunkPos(voxelIndex5, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos6 = Utils.GetChunkPos(voxelIndex6, chunkSettings[0].ChunkWidth);
+		                float3 voxelPos7 = Utils.GetChunkPos(voxelIndex7, chunkSettings[0].ChunkWidth);
+
+		                //Calculate edge positions
+		                float3 edgePos00 = LerpVoxelPosition(voxelPos0, voxelPos1, densities[voxelIndex0],
+			                densities[voxelIndex1]);
+		                float3 edgePos01 = LerpVoxelPosition(voxelPos1, voxelPos2, densities[voxelIndex1],
+			                densities[voxelIndex2]);
+		                float3 edgePos02 = LerpVoxelPosition(voxelPos2, voxelPos3, densities[voxelIndex2],
+			                densities[voxelIndex3]);
+		                float3 edgePos03 = LerpVoxelPosition(voxelPos3, voxelPos0, densities[voxelIndex3],
+			                densities[voxelIndex0]);
+
+		                float3 edgePos04 = LerpVoxelPosition(voxelPos4, voxelPos5, densities[voxelIndex4],
+			                densities[voxelIndex5]);
+		                float3 edgePos05 = LerpVoxelPosition(voxelPos5, voxelPos6, densities[voxelIndex5],
+			                densities[voxelIndex6]);
+		                float3 edgePos06 = LerpVoxelPosition(voxelPos6, voxelPos7, densities[voxelIndex6],
+			                densities[voxelIndex7]);
+		                float3 edgePos07 = LerpVoxelPosition(voxelPos7, voxelPos4, densities[voxelIndex7],
+			                densities[voxelIndex4]);
+
+		                float3 edgePos08 = LerpVoxelPosition(voxelPos4, voxelPos0, densities[voxelIndex4],
+			                densities[voxelIndex0]);
+		                float3 edgePos09 = LerpVoxelPosition(voxelPos5, voxelPos1, densities[voxelIndex5],
+			                densities[voxelIndex1]);
+		                float3 edgePos10 = LerpVoxelPosition(voxelPos6, voxelPos2, densities[voxelIndex6],
+			                densities[voxelIndex2]);
+		                float3 edgePos11 = LerpVoxelPosition(voxelPos7, voxelPos3, densities[voxelIndex7],
+			                densities[voxelIndex3]);
+
+		                verts.AddRange(new Vector3[]
+		                {
+			                edgePos00, edgePos01, edgePos02, edgePos03,
+			                edgePos04, edgePos05, edgePos06, edgePos07,
+			                edgePos08, edgePos09, edgePos10, edgePos11
+		                });
+
+
+		                //triangulate, connect edges
+		                int triHistory = indexFlat * 12;
+		                for (int triIndex = 0;; triIndex++)
+		                {
+			                int lookUpTableEdgeValue = TriangleConnectionTable[vertFlag, triIndex];
+
+			                if (lookUpTableEdgeValue == -1)
+				                break;
+
+			                tris.Add(lookUpTableEdgeValue + triHistory);
+		                }
+
+	                }
                 });
-                
-                    //front face
-//                    tris.AddRange( new int[]{pointVertIndex+0, pointVertIndex+2, pointVertIndex+3}); // |_
-//                    tris.AddRange( new int[]{pointVertIndex+1, pointVertIndex+0, pointVertIndex+3}); // _|
-//                    
-//                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+6, pointVertIndex+4}); // _|
-//                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+4, pointVertIndex+5}); // |_
-                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-                
                 
                 currentRenderMesh.mesh.SetVertices(verts);
                 currentRenderMesh.mesh.SetIndices(tris, MeshTopology.Triangles, 0); //ei instead of 0
@@ -86,6 +181,7 @@ namespace MarchingCubes.Systems
         }
         
         /// <summary>
+        /// THIS SAYS WHAT EDGES ARE ACTIVATED
         /// For any edge, if one vertex is inside of the surface and the other 
         /// is outside of the surface then the edge intersects the surface.
         /// For each of the 8 vertices of the cube can be two possible states,
@@ -135,6 +231,7 @@ namespace MarchingCubes.Systems
 
 
         /// <summary>
+        /// NUMBER OF intersection point
         /// For each of the possible vertex states listed in cubeEdgeFlags there is a specific triangulation
         /// of the edge intersection points.  triangleConnectionTable lists all of them in the form of
         /// 0-5 edge triples with the list terminated by the invalid value -1.
