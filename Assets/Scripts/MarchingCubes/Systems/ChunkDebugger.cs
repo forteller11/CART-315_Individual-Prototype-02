@@ -1,4 +1,5 @@
 ﻿using System;
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -23,51 +24,53 @@ namespace MarchingCubes.Systems
         {
             if (DebugDraw == false)
                 return;
-
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            Entities.WithAll<ChunkIndex>().WithNone<DensityCube>().ForEach((Entity entity) =>
-            {
-                DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetSharedComponentData<ChunkIndex>(entity));
-                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
-            });
-            
-            Entities.WithAll<DensityCube, Translation>().ForEach((Entity entity) =>
-            {
-                var chunkIndex = ecs.GetSharedComponentData<ChunkIndex>(entity);
-                var densityCube = ecs.GetComponentData<DensityCube>(entity);
-                var translation = ecs.GetComponentData<Translation>(entity);
-                
-                densityCube.ForEach( translation, chunkIndex, (density, pos) =>
-                {
-                    
-                    var r = 1/((chunkIndex.Value.x % modR)+1);
-                    var g = 1/((chunkIndex.Value.y % modG)+1);
-                    var b = 1/((chunkIndex.Value.z % modB)+1);
-                    var col = new Color(r, g, b,density + BaseAlpha);
-            
-                    float len = (0.2f * density) + BaseSize;
-            
-                    float3 offset = new float3(
-                        _random.NextFloat(-len,len),
-                        _random.NextFloat(-len,len),
-                        _random.NextFloat(-len,len));
-                    
-                    Debug.DrawLine(pos,pos + offset, col);
+            EntityQuery queryPoints = GetEntityQuery(Unity.Entities.ComponentType.ReadOnly<ChunkSettingsSingleton>());
+            var chunkSettings = queryPoints.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.Temp);
+        
 
-                });
-                
-                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
+                Entities.WithAll<ChunkIndex>().ForEach((Entity entity) => //chunk
+            {
+                DebugDrawChunk(ecs.GetComponentData<Translation>(entity), ecs.GetComponentData<ChunkIndex>(entity), chunkSettings[0]);
             });
             
+//            Entities.WithAll<ChunkIndex, Translation>().ForEach((Entity entity) =>
+//            {
+//                var chunkIndex = ecs.GetComponentData<ChunkIndex>(entity);
+//                var translation = ecs.GetComponentData<Translation>(entity);
+//                
+//                
+//                densityCube.ForEach( translation, chunkIndex, (density, pos) =>
+//                {
+//                    
+//                    var r = 1/((chunkIndex.Value.x % modR)+1);
+//                    var g = 1/((chunkIndex.Value.y % modG)+1);
+//                    var b = 1/((chunkIndex.Value.z % modB)+1);
+//                    var col = new Color(r, g, b,density + BaseAlpha);
+//            
+//                    float len = (0.2f * density) + BaseSize;
+//            
+//                    float3 offset = new float3(
+//                        _random.NextFloat(-len,len),
+//                        _random.NextFloat(-len,len),
+//                        _random.NextFloat(-len,len));
+//                    
+//                    Debug.DrawLine(pos,pos + offset, col);
+//                    
+//                });
+//                
+//                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
+//            });
+            chunkSettings.Dispose();
         }
 
 
-        void DebugDrawChunk(Translation pos, ChunkIndex index)
+        void DebugDrawChunk(Translation pos, ChunkIndex index, ChunkSettingsSingleton settings)
         {
             _random.state = (uint) index.Value.Volume()+1;
             
             float3 p = pos.Value;
-            var w = (SpawnChunks.ChunkWidth/2)*.98f;
+            var w = (settings.ChunkWidth/2)*.98f;
             
             //points on chunk cube
             var bl1 = new float3(-w, -w, w);

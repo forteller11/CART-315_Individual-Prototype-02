@@ -16,95 +16,95 @@ namespace MarchingCubes.Systems
         protected override void OnUpdate()
         {
 
-	        var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
-            EntityQuery queryDirtyChunks = GetEntityQuery(
-                Unity.Entities.ComponentType.ReadOnly<RenderMesh>(),
-                ComponentType.ReadOnly<Tag_DirtyChunk>(),
-                ComponentType.ReadOnly<Translation>(),
-                ComponentType.ReadOnly<ChunkIndex>()
-                );
-            
-            EntityQuery queryPoints = GetEntityQuery(
-                Unity.Entities.ComponentType.ReadOnly<DensityCube>(),
-                ComponentType.ReadOnly<ChunkIndex>(),
-                ComponentType.ReadOnly<Translation>());
-
-            var dirtyChunks = queryDirtyChunks.ToEntityArray(Allocator.TempJob);
-            var dirtyChunkTranslations = queryDirtyChunks.ToComponentDataArray<Translation>(Allocator.TempJob);
-            //Debug.Log($"dirty chunks queried {dirtyChunks.Length}");
-            for (int ei = 0; ei < dirtyChunks.Length; ei++)
-            {
-                ecs.RemoveComponent<Tag_DirtyChunk>(dirtyChunks[ei]);
-                ChunkIndex currentChunkIndex = ecs.GetSharedComponentData<ChunkIndex>(dirtyChunks[ei]);
-                RenderMesh currentRenderMesh = ecs.GetSharedComponentData<RenderMesh>(dirtyChunks[ei]);
-                
-                queryPoints.SetSharedComponentFilter(currentChunkIndex);
-
-                var densities = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
-                var densityPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
-                
-                List<Vector3> verts = new List<Vector3>(densities.Length * 8);
-                List<int> tris = new List<int>();
-                uint triIndex = 0;
-                for (int di = 0; di < densities.Length; di++)
-                {
-                    var pointVertIndex = di * 12;
-                    densities[di].ForEach(densityPositions[di], currentChunkIndex, (density, pos) =>
-                    {
-	                    var vertFlag = densities[di].VertFlagsFromThreshold(MarchingCubesThreshold);
-	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, dirtyChunkTranslations[ei].Value, currentChunkIndex.DensityCubeWidth));
-	                    tris.AddRange(densities[di].GetAllDenseIndices(MarchingCubesThreshold, pointVertIndex));
-	                    //get all vert positions
-	                    //var edgeFlag = CubeEdgeFlags[vertFlag]; //THIS ISN'T WORKIGN CORRECTLY
-	                    // BitArray bits = new BitArray(BitConverter.GetBytes(edgeFlag));
-	                    // for (int ti = 0; ti < 16; ti++)
-	                    // {
-	                    //  var triConnectionList = TriangleConnectionTable[edgeFlag, ti];
-	                    //  if (triConnectionList != -1)
-	                    //  {
-	                    //   tris.Add(triConnectionList);
-	                    //  }
-	                    //
-	                    // Debug.Log(cubePos);
-	                    //Debug.DrawLine(cubePos, cubePos + new float3(0f, .3f, .3f), Color.red);
-	                    // }
-
-
-                    });
-                    //front face
-//                    tris.AddRange( new int[]{pointVertIndex+0, pointVertIndex+2, pointVertIndex+3}); // |_
-//                    tris.AddRange( new int[]{pointVertIndex+1, pointVertIndex+0, pointVertIndex+3}); // _|
+//	        var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
+//            EntityQuery queryDirtyChunks = GetEntityQuery(
+//                Unity.Entities.ComponentType.ReadOnly<RenderMesh>(),
+//                ComponentType.ReadOnly<Tag_DirtyChunk>(),
+//                ComponentType.ReadOnly<Translation>(),
+//                ComponentType.ReadOnly<ChunkIndex>()
+//                );
+//            
+//            EntityQuery queryPoints = GetEntityQuery(
+//                Unity.Entities.ComponentType.ReadOnly<DensityCube>(),
+//                ComponentType.ReadOnly<ChunkIndex>(),
+//                ComponentType.ReadOnly<Translation>());
+//
+//            var dirtyChunks = queryDirtyChunks.ToEntityArray(Allocator.TempJob);
+//            var dirtyChunkTranslations = queryDirtyChunks.ToComponentDataArray<Translation>(Allocator.TempJob);
+//            //Debug.Log($"dirty chunks queried {dirtyChunks.Length}");
+//            for (int ei = 0; ei < dirtyChunks.Length; ei++)
+//            {
+//                ecs.RemoveComponent<Tag_DirtyChunk>(dirtyChunks[ei]);
+//                ChunkIndex currentChunkIndex = ecs.GetSharedComponentData<ChunkIndex>(dirtyChunks[ei]);
+//                RenderMesh currentRenderMesh = ecs.GetSharedComponentData<RenderMesh>(dirtyChunks[ei]);
+//                
+//                queryPoints.SetSharedComponentFilter(currentChunkIndex);
+//
+//                var densities = queryPoints.ToComponentDataArray<DensityCube>(Allocator.TempJob);
+//                var densityPositions = queryPoints.ToComponentDataArray<Translation>(Allocator.TempJob);
+//                
+//                List<Vector3> verts = new List<Vector3>(densities.Length * 8);
+//                List<int> tris = new List<int>();
+//                uint triIndex = 0;
+//                for (int di = 0; di < densities.Length; di++)
+//                {
+//                    var pointVertIndex = di * 12;
+//                    densities[di].ForEach(densityPositions[di], currentChunkIndex, (density, pos) =>
+//                    {
+//	                    var vertFlag = densities[di].VertFlagsFromThreshold(MarchingCubesThreshold);
+//	                    verts.AddRange(densities[di].GetAllEdgePositions(pos, dirtyChunkTranslations[ei].Value, currentChunkIndex.DensityCubeWidth));
+//	                    tris.AddRange(densities[di].GetAllDenseIndices(MarchingCubesThreshold, pointVertIndex));
+//	                    //get all vert positions
+//	                    //var edgeFlag = CubeEdgeFlags[vertFlag]; //THIS ISN'T WORKIGN CORRECTLY
+//	                    // BitArray bits = new BitArray(BitConverter.GetBytes(edgeFlag));
+//	                    // for (int ti = 0; ti < 16; ti++)
+//	                    // {
+//	                    //  var triConnectionList = TriangleConnectionTable[edgeFlag, ti];
+//	                    //  if (triConnectionList != -1)
+//	                    //  {
+//	                    //   tris.Add(triConnectionList);
+//	                    //  }
+//	                    //
+//	                    // Debug.Log(cubePos);
+//	                    //Debug.DrawLine(cubePos, cubePos + new float3(0f, .3f, .3f), Color.red);
+//	                    // }
+//
+//
+//                    });
+//                    //front face
+////                    tris.AddRange( new int[]{pointVertIndex+0, pointVertIndex+2, pointVertIndex+3}); // |_
+////                    tris.AddRange( new int[]{pointVertIndex+1, pointVertIndex+0, pointVertIndex+3}); // _|
+////                    
+////                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+6, pointVertIndex+4}); // _|
+////                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+4, pointVertIndex+5}); // |_
 //                    
-//                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+6, pointVertIndex+4}); // _|
-//                    tris.AddRange( new int[]{pointVertIndex+7, pointVertIndex+4, pointVertIndex+5}); // |_
-                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-//                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
-                }
-                
-                currentRenderMesh.mesh.SetVertices(verts);
-                currentRenderMesh.mesh.SetIndices(tris, MeshTopology.Triangles, 0); //ei instead of 0
-                currentRenderMesh.mesh.RecalculateBounds();
-                currentRenderMesh.mesh.RecalculateNormals();
-                //ecs.SetSharedComponentData(dirtyChunks[ei], currentRenderMesh);
-                Debug.Log("Draw mesh!");
-                //Graphics.DrawMesh(currentRenderMesh.mesh, Matrix4x4.identity, currentRenderMesh.material, 0);
-
-                densities.Dispose();
-                densityPositions.Dispose();
-            }
-
-            dirtyChunkTranslations.Dispose();
-            dirtyChunks.Dispose();
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+////                    tris.AddRange( new int[]{pointIndex+0, pointIndex+1, pointIndex+2});
+//                }
+//                
+//                currentRenderMesh.mesh.SetVertices(verts);
+//                currentRenderMesh.mesh.SetIndices(tris, MeshTopology.Triangles, 0); //ei instead of 0
+//                currentRenderMesh.mesh.RecalculateBounds();
+//                currentRenderMesh.mesh.RecalculateNormals();
+//                //ecs.SetSharedComponentData(dirtyChunks[ei], currentRenderMesh);
+//                Debug.Log("Draw mesh!");
+//                //Graphics.DrawMesh(currentRenderMesh.mesh, Matrix4x4.identity, currentRenderMesh.material, 0);
+//
+//                densities.Dispose();
+//                densityPositions.Dispose();
+//            }
+//
+//            dirtyChunkTranslations.Dispose();
+//            dirtyChunks.Dispose();
         }
         
         /// <summary>

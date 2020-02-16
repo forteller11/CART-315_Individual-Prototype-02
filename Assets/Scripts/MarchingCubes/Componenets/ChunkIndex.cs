@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 namespace MarchingCubes
 {
-    public struct ChunkIndex : ISharedComponentData
+    public struct ChunkIndex : IComponentData
     {
         public int3 Value;
     }

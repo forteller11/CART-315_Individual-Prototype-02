@@ -45,10 +45,12 @@ namespace MarchingCubes
             Debug.LogWarning("Make sure the internal buffer capacity of chunkDensities is (points in a row)^3");
             var conversionSettings = GameObjectConversionSettings.FromWorld(World.DefaultGameObjectInjectionWorld, _blobAssetStore);
             Entity chunkEntity = GameObjectConversionUtility.ConvertGameObjectHierarchy(ChunkGameObjectPrefab, conversionSettings);
-            
             ecsManager.AddComponent<ChunkIndex>(chunkEntity);
- 
             ecsManager.AddComponent<Scale>(chunkEntity);
+            var chunkBuffer = ecsManager.AddBuffer<ChunkDensities>(chunkEntity);
+            chunkBuffer.Capacity = VoxelsInARow * VoxelsInARow * VoxelsInARow;
+            for (int i = 0; i < chunkBuffer.Capacity; i++)
+                chunkBuffer.Add(-1);
 
             ///////CHUNK SETTINGS SINGLETON
             var chunkSettingsEntity = ecsManager.CreateEntity(typeof(ChunkSettingsSingleton));
@@ -61,19 +63,18 @@ namespace MarchingCubes
             
             
             //set chunk datas
-            chunks.IndexAsIf3D(ChunksToSpawn, (indexFlat, index3D, indexJumps) =>
+            Utils.IndexAsIf3D(ChunksToSpawn, (indexFlat, index3D, indexJumps) =>
             {
-                ecsManager.SetName(chunks[indexFlat], $"Chunk [{index3D.x}, {index3D.y}, {index3D.z}] : {indexFlat}");
-                
                 var chunkPos = new float3(index3D.x, index3D.y, index3D.z) * ChunkWidth;
-                var chunkIndex = GetChunkIndex(chunkPos, ChunkWidth);
                 
+                ecsManager.SetName(chunks[indexFlat], $"Chunk [{index3D.x}, {index3D.y}, {index3D.z}] : {indexFlat}");
                 ecsManager.SetComponentData(chunks[indexFlat], new Scale { Value = 1 });
                 ecsManager.SetComponentData(chunks[indexFlat], new Translation { Value = chunkPos });
-                ecsManager.SetSharedComponentData(chunks[indexFlat], new ChunkIndex { Value = chunkIndex });
-                Debug.LogWarning("make sure initial densities are in fact what you tried to set them to, or else this is copy by value not ref!");
+                ecsManager.SetComponentData(chunks[indexFlat], new ChunkIndex { Value = GetChunkIndex(chunkPos, ChunkWidth) });
+                
                 var densities = ecsManager.GetBuffer<ChunkDensities>(chunks[indexFlat]).Reinterpret<float>();
-                densities[indexFlat] = ran.NextFloat(1f);
+                for (int densityIndex = 0; densityIndex < densities.Length; densityIndex++)
+                    densities[densityIndex] = ran.NextFloat(1f);
 
             });
 

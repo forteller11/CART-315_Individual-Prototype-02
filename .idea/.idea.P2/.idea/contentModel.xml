@@ -34,6 +34,7 @@
               <e p="MarchingCubes.cs" t="Include" />
               <e p="PlayerMovement.cs" t="Include" />
             </e>
+            <e p="Utils.cs" t="Include" />
           </e>
           <e p="PlayerMovement.cs" t="Include" />
           <e p="PlayerMovementMono.cs" t="Include" />
