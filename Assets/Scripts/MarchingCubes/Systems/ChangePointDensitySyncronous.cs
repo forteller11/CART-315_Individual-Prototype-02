@@ -128,6 +128,7 @@ namespace MarchingCubes.Systems
                     distanceChunkHits.Dispose();
                 }
             }); //for each
+            chunkSettings.Dispose();
 
         }
         
