@@ -32,37 +32,36 @@ namespace MarchingCubes.Systems
         
 
                 Entities.WithAll<ChunkIndex>().ForEach((Entity entity) => //chunk
-            {
-                DebugDrawChunk(ecs.GetComponentData<ChunkIndex>(entity), chunkSettings[0]);
+                {
+                    var chunkIndex = ecs.GetComponentData<ChunkIndex>(entity);
+                    DebugDrawChunk(chunkIndex, chunkSettings[0]);
+
+                    var chunkPos = (float3) chunkIndex.Value * chunkSettings[0].ChunkWidth;
+                    var densitiesBuffer = ecs.GetBuffer<ChunkDensities>(entity);
+                    var densities = densitiesBuffer.Reinterpret<float>();
+                    
+                    Utils.IndexAsIf3D(new int3 (chunkSettings[0].VoxelsInARow), (indexFlat, index3D, indexJump) =>
+                    {
+                        float3 posRelative = Utils.GetDensityPos(chunkSettings[0].WidthBetweenVoxels, index3D);
+                        float3 pos = posRelative + chunkPos;
+                            
+                        var r = 1/((chunkIndex.Value.x % modR)+1);
+                        var g = 1/((chunkIndex.Value.y % modG)+1);
+                        var b = 1/((chunkIndex.Value.z % modB)+1);
+                        var col = new Color(r, g, b,densities[indexFlat] + BaseAlpha);
+                
+                        float len = (0.2f * densities[indexFlat]) + BaseSize;
+                
+                        float3 offset = new float3(
+                            _random.NextFloat(-len,len),
+                            _random.NextFloat(-len,len),
+                            _random.NextFloat(-len,len));
+                        
+                        Debug.DrawLine(pos,pos + offset, col);
+                    });
             });
             
-//            Entities.WithAll<ChunkIndex, Translation>().ForEach((Entity entity) =>
-//            {
-//                var chunkIndex = ecs.GetComponentData<ChunkIndex>(entity);
-//                var translation = ecs.GetComponentData<Translation>(entity);
-//                
-//                
-//                densityCube.ForEach( translation, chunkIndex, (density, pos) =>
-//                {
-//                    
-//                    var r = 1/((chunkIndex.Value.x % modR)+1);
-//                    var g = 1/((chunkIndex.Value.y % modG)+1);
-//                    var b = 1/((chunkIndex.Value.z % modB)+1);
-//                    var col = new Color(r, g, b,density + BaseAlpha);
-//            
-//                    float len = (0.2f * density) + BaseSize;
-//            
-//                    float3 offset = new float3(
-//                        _random.NextFloat(-len,len),
-//                        _random.NextFloat(-len,len),
-//                        _random.NextFloat(-len,len));
-//                    
-//                    Debug.DrawLine(pos,pos + offset, col);
-//                    
-//                });
-//                
-//                //Debug.Log($"Chunk Debugger || Entity Index {entity.Index}");
-//            });
+           
             chunkSettings.Dispose();
         }
 
@@ -72,18 +71,18 @@ namespace MarchingCubes.Systems
             _random.state = (uint) index.Value.Volume()+1;
             
             float3 p = settings.ChunkWidth * (float3) index.Value;
-            var w = (settings.ChunkWidth/2)*.98f;
+            float w = settings.ChunkWidth * 0.98f;
             
             //points on chunk cube
-            var bl1 = new float3(-w, -w, w);
-            var br1 = new float3(w, -w, w);
+            var bl1 = new float3(0, 0, w);
+            var br1 = new float3(w, 0, w);
             var tr1 = new float3(w, w, w);
-            var tl1 = new float3(-w, w, w);
+            var tl1 = new float3(0, w, w);
                 
-            var bl2 = new float3(-w, -w, -w);
-            var br2 = new float3(w, -w, -w);
-            var tr2 = new float3(w, w, -w);
-            var tl2 = new float3(-w, w, -w);
+            var bl2 = new float3(0, 0, 0);
+            var br2 = new float3(w, 0, 0);
+            var tr2 = new float3(w, w, 0);
+            var tl2 = new float3(0, w, 0);
                 
             var r = 1/((index.Value.x % modR)+1);
             var g = 1/((index.Value.y % modG)+1);

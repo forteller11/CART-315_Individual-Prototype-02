@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using Unity.Mathematics;
 
 namespace MarchingCubes
@@ -34,6 +35,18 @@ namespace MarchingCubes
             }
         }
         
+      
+        /// <summary>
+        /// Returns Position of Density Point relative to chunk
+        /// </summary>
+        /// <param name="widthBetweenVoxels"> (chunksettings) width between voxels</param>
+        /// <param name="index"> 3d index of point within chunk</param>
+        /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float3 GetDensityPos(float widthBetweenVoxels, int3 index)
+        {
+            return (float3) index * widthBetweenVoxels;
+        }
         
     }
 }
