@@ -50,7 +50,7 @@ namespace MarchingCubes.Systems
                         var b = 1/((chunkIndex.Value.z % modB)+1);
                         var col = new Color(r, g, b,densities[indexFlat] + BaseAlpha);
                 
-                        float len = (0.2f * densities[indexFlat]) + BaseSize;
+                        float len = (0.3f * densities[indexFlat]) + BaseSize;
                 
                         float3 offset = new float3(
                             _random.NextFloat(-len,len),

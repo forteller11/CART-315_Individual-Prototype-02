@@ -22,9 +22,9 @@ namespace MarchingCubes.Systems
             GroupIndex = 0,
         };
 
-        private float _buildRadius = 2f;
-        private float _maxBuildRate = 0.1f;
-        private float _minBuildRate = 0;
+        private float _buildRadius = 1.5f;
+        private float _maxBuildRate = 0.03f;
+        private float _minBuildRate = .005f;
         private PlayerControls _input;
         
         
@@ -43,6 +43,11 @@ namespace MarchingCubes.Systems
 
         protected override void OnUpdate()
         {
+
+            float buildInput = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
+            if (math.abs(buildInput) < 0.08f) //return if not inputting
+                return;
+            
             var ecs = World.DefaultGameObjectInjectionWorld.EntityManager;
             var buildPhysicsWorld = World.Active.GetExistingSystem<Unity.Physics.Systems.BuildPhysicsWorld>();
             var collisionWorld = buildPhysicsWorld.PhysicsWorld.CollisionWorld;
@@ -51,14 +56,6 @@ namespace MarchingCubes.Systems
 
             var camPos = Camera.main.gameObject.transform.position;
             var camDir = Camera.main.gameObject.transform.forward;
-            
-            
-            float buildInput = _input.PlayerMovement.Build.ReadValue<float>() - _input.PlayerMovement.Dig.ReadValue<float>();
-            
-            //see if entity hit chunk
-
-            if (math.abs(buildInput) < 0.08f) //return if not inputting
-                return;
             
             //hitting a chunk?
             Entities.ForEach((ref Translation translation, ref Input input) =>
