@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -395,14 +395,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
     type: 3}
-  PointsInRow: 1
+  VoxelsInARow: 3
+  ChunkWidth: 4
   ChunksToSpawn:
-    x: 1
-    y: 1
-    z: 1
+    x: 2
+    y: 2
+    z: 2
   DebugDraw: 1
-  BaseDensityAlpha: 0.045
-  BaseDensityVectorLength: 0.098
+  BaseDensityAlpha: 0.132
+  BaseDensityVectorLength: 0.18
   MarchingCubesThreshold: 0
   InitialDensity: 0.355
 --- !u!4 &233439848
@@ -450,6 +451,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: Angular.x
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 8472469735800098407, guid: 99a7cb076f81e234abf06dfd303956a3,
+        type: 3}
+      propertyPath: Angular.y
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 8472469735800098410, guid: 99a7cb076f81e234abf06dfd303956a3,
         type: 3}

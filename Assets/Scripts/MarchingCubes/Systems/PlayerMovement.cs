@@ -34,27 +34,35 @@ namespace MarchingCubes
             
             //Debug.Log($"linear: {inputLinear}");
             //Debug.Log($"angular: {inputAngular}");
-            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input input, ref Rotation rotation, ref Translation translation) =>
+            Entities.WithAll<Input>().ForEach((ref PhysicsVelocity velocity, ref Input sensitivity, ref Rotation rotation, ref Translation translation) =>
             { 
-                float3 upVectorAbs = new float3(0,1,0);
+                float3 upVectorAbsolute = new float3(0,1,0);
                    
                 
                 //rotate around upvectorabs
                 //then rotate around right vector abs
                 
-                float2 angularToAdd = inputAngular * input.Angular;
+                float2 angularToAdd = inputAngular * sensitivity.Angular;
                 float3 forwardVectorAbs = new float3(0,0,1);
-                float3 rightVectorAbs = new float3(1,0,0);
-                
-                var rotMat1 = new float3x3(rotation.Value);
-                var r1 = Quaternion.AngleAxis(inputAngular.x * input.Angular.x, math.mul(rotMat1, upVectorAbs));
+                float3 rightVectorAbsolute = new float3(1,0,0);
+                float3 upVectorRelative = math.mul(rotation.Value, upVectorAbsolute);
+
+                var angularForce = new float3(inputAngular.x * sensitivity.Angular.x,
+                    inputAngular.y * sensitivity.Angular.y, 0f);
+                var r1 = Quaternion.AngleAxis(angularForce.x, upVectorRelative);
+                Debug.DrawLine(translation.Value, translation.Value + upVectorRelative, Color.green);
+                Debug.DrawLine(translation.Value, translation.Value + upVectorAbsolute, new Color(0,1,0,0.2f));
                 rotation.Value = math.mul(rotation.Value, r1);
                 
-                var rotMat2 = new float3x3(rotation.Value);
-                var r2 = Quaternion.AngleAxis(inputAngular.y * input.Angular.y, math.mul(rotMat2, forwardVectorAbs));
-                //_forwardCache
-                rotation.Value = math.mul(rotation.Value, r2);
-                
+                float3 rightVectorRelative = math.mul(rotation.Value, rightVectorAbsolute);
+//                Debug.DrawLine(translation.Value, translation.Value + rightVectorRelative, new Color(1,0,0,1f));
+                var r2 = Quaternion.AngleAxis(angularForce.y, rightVectorRelative);
+//                //_forwardCache
+                //rotation.Value = math.mul(rotation.Value, r2);
+
+               // var rotMat = math.mul(r2, r1);
+                //rotation.Value = math.mul(rotation.Value, rotMat);
+//
 
                 //Quaternion.LookRotation()
                 
@@ -66,15 +74,14 @@ namespace MarchingCubes
 
               
                 float3 forwardVectorRelative = math.mul(rotMat3, forwardVectorAbs);
-                float3 rightVectorRelative = math.mul(rotMat3, rightVectorAbs);
+                //float3 rightVectorRelative = math.mul(rotMat3, rightVectorAbsolute);
                 float3 noVerticalMovement = new float3(1,0,1);
                 
                 
-                Debug.DrawLine(translation.Value, translation.Value + forwardVectorRelative*10000, Color.yellow);
-                Debug.DrawLine(translation.Value, translation.Value + rightVectorRelative*100, Color.red);
-    
-                velocity.Linear += forwardVectorRelative   * noVerticalMovement * input.Linear.y * inputLinear.y * t;
-                velocity.Linear += rightVectorRelative * noVerticalMovement * input.Linear.x * inputLinear.x * t;
+                Debug.DrawLine(translation.Value, translation.Value + forwardVectorRelative, Color.blue);
+
+                velocity.Linear += forwardVectorRelative   * noVerticalMovement * sensitivity.Linear.y * inputLinear.y * t;
+                velocity.Linear += rightVectorRelative * noVerticalMovement * sensitivity.Linear.x * inputLinear.x * t;
        
 
 
