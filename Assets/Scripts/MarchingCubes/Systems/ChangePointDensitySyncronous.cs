@@ -55,9 +55,9 @@ namespace MarchingCubes.Systems
             var chunkSettings = settingsQuery.ToComponentDataArray<ChunkSettingsSingleton>(Allocator.TempJob);
 
             var camPos = Camera.main.gameObject.transform.position;
-            //var camDir = Camera.main.gameObject.transform.forward;
-            var viewRay = Camera.main.ScreenPointToRay(new float3(Screen.width / 2, UnityEngine.Input.mousePosition.y,0));
-            var camDir = viewRay.direction;
+            var camDir = Camera.main.gameObject.transform.forward;
+           // var viewRay = Camera.main.ScreenPointToRay(new float3(Screen.width / 2, UnityEngine.Input.mousePosition.y,0));
+            //var camDir = viewRay.direction;
             
             //hitting a chunk?
             Entities.ForEach((ref Translation translation, ref Input input) =>

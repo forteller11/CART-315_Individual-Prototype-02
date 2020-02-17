@@ -17,15 +17,15 @@ public class RotatePlayer : MonoBehaviour
     void Update()
     {
         float2 inputAngular = (float2) _input.PlayerMovement.Rotate.ReadValue<Vector2>() * AngularSensitivty;
-        float2 inputLinear = (float2) _input.PlayerMovement.Rotate.ReadValue<Vector2>() * LinearSensitivty;
+//        float2 inputLinear = (float2) _input.PlayerMovement.Rotate.ReadValue<Vector2>() * LinearSensitivty;
         
         _rotationEuler += inputAngular * Time.deltaTime;
         transform.rotation = quaternion.identity;
         transform.Rotate(transform.up,_rotationEuler.x,Space.World);
         transform.Rotate(transform.right,-_rotationEuler.y,Space.World);
         
-        transform.position += transform.forward * LinearSensitivty.y * Time.deltaTime;
-        transform.position += transform.right * LinearSensitivty.x * Time.deltaTime;
+//        transform.position += transform.forward * LinearSensitivty.y * Time.deltaTime * inputLinear.y;
+//        transform.position += transform.right * LinearSensitivty.x * Time.deltaTime * inputLinear.x;
 
     }
 }
