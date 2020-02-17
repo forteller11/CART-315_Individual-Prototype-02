@@ -24,6 +24,8 @@ namespace MarchingCubes
         public bool DebugDraw = false;
         [Range(0,.5f)]
         public float BaseDensityAlpha = .1f;
+
+        [Range(0, 1f)] public float MaxDensityAlpha = 1f;
         [Range(0,.5f)]
         public float BaseDensityVectorLength = 0.05f;
 
@@ -125,6 +127,7 @@ namespace MarchingCubes
         {
             ChunkDebugger.DebugDraw = DebugDraw;
             ChunkDebugger.BaseAlpha = BaseDensityAlpha;
+            ChunkDebugger.MaxAlpha = MaxDensityAlpha;
             ChunkDebugger.BaseSize = BaseDensityVectorLength;
             Systems.MarchingCubes.MarchingCubesThreshold = MarchingCubesThreshold;
             ChangePointDensitySynchronous.BuildRadius = BuildRadius;

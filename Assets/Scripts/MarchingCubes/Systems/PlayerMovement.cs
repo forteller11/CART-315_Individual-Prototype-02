@@ -39,7 +39,6 @@ namespace MarchingCubes
                 
                 float3 forwardVectorAbsolute = new float3(0,0,1);
                 float3 rightVectorAbsolute = new float3(1,0,0);
-                float3 upVectorRelative = math.mul(rotation.Value, upVectorAbsolute);
 
                 var rotMat3 = new float3x3(rotation.Value);
                 

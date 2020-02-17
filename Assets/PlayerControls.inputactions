@@ -170,6 +170,17 @@
                 },
                 {
                     "name": "",
+                    "id": "8722ad18-c630-4467-9e7d-8cf11da6b303",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Build",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b95a38b9-422b-4bc7-9fd9-a7ff8e511408",
                     "path": "<Mouse>/rightButton",
                     "interactions": "",
@@ -183,6 +194,17 @@
                     "name": "",
                     "id": "70295404-cd59-446c-be67-d14d6906a42f",
                     "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dig",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "399b1094-0358-4e98-8905-7d66e61bd6bb",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

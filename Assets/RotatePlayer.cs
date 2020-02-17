@@ -7,7 +7,6 @@ public class RotatePlayer : MonoBehaviour
 {
     private PlayerControls _input;
     public float2 AngularSensitivty = new float2(5, 5);
-    public float2 LinearSensitivty = new float2(5,5);
     public float2 _rotationEuler;
     
      void Awake() => _input = new PlayerControls();

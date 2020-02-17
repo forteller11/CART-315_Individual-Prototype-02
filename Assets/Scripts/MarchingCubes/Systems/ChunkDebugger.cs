@@ -15,6 +15,7 @@ namespace MarchingCubes.Systems
     {
         public static bool DebugDraw = false;
         public static float BaseAlpha = 0.1f;
+        public static float MaxAlpha = 1f;
         public static float BaseSize = 0.05f;
         private Random _random = new Random(10);
         private float modR = 2;
@@ -48,7 +49,7 @@ namespace MarchingCubes.Systems
                         var r = 1/((chunkIndex.Value.x % modR)+1);
                         var g = 1/((chunkIndex.Value.y % modG)+1);
                         var b = 1/((chunkIndex.Value.z % modB)+1);
-                        var col = new Color(r, g, b,densities[indexFlat] + BaseAlpha);
+                        var col = new Color(r, g, b,math.lerp(BaseAlpha,MaxAlpha,densities[indexFlat]));
                 
                         float len = (0.3f * densities[indexFlat]) + BaseSize;
                 
@@ -88,11 +89,8 @@ namespace MarchingCubes.Systems
             var g = 1/((index.Value.y % modG)+1);
             var b = 1/((index.Value.z % modB)+1);
             
-            var col = new Color(r, g, b,1);
-  
-            var leftCol = new Color(.2f,.4f,1);
-            var rightCol = new Color(1,.3f,.2f);
-            var vertCol = new Color(1,1,0);
+            var col = new Color(r, g, b,MaxAlpha);
+            
                 
             //sqr 1
             Debug.DrawLine(bl1 + p,br1 + p, col);
