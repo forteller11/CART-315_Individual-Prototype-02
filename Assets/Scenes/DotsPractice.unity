@@ -395,17 +395,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ChunkGameObjectPrefab: {fileID: 3448088159668750072, guid: 713524bcad2e4ac48b806f5f17470c33,
     type: 3}
-  VoxelsInARow: 11
+  VoxelsInARow: 5
   ChunkWidth: 4
   ChunksToSpawn:
     x: 1
     y: 1
     z: 1
-  DebugDraw: 0
+  DebugDraw: 1
   BaseDensityAlpha: 0.049
   BaseDensityVectorLength: 0.059
-  MarchingCubesThreshold: 0.792
+  MarchingCubesThreshold: 0.807
   InitialDensity: 0.355
+  MinDig: 0.033
+  MaxDig: 0.289
+  BuildRadius: 2
 --- !u!4 &233439848
 Transform:
   m_ObjectHideFlags: 0

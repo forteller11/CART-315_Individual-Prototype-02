@@ -31,7 +31,7 @@ public class CreateAndChildGameObject : MonoBehaviour
     void Update()
     {
         transform.position = World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<Translation>(_parent).Value + PositionOffset;
-        transform.rotation = math.mul( World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<Rotation>(_parent).Value, RotationOffset);
+        //transform.rotation = math.mul( World.DefaultGameObjectInjectionWorld.EntityManager.GetComponentData<Rotation>(_parent).Value, RotationOffset);
     }
 
     private void OnDestroy()
